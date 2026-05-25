@@ -1,0 +1,19 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "useGulp": false,
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.18.0",
+    "sdksVersions": {},
+    "version": "1.22.2",
+    "libraryName": "mg-store",
+    "libraryId": "c3f3a01b-0bba-4acb-b936-72300059d55f",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "MGStore",
+    "solutionShortDescription": "MGStore description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

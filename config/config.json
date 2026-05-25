@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "mg-store-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/mgStore/MgStoreWebPart.js",
+          "manifest": "./src/webparts/mgStore/MgStoreWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "MgStoreWebPartStrings": "lib/webparts/mgStore/loc/{locale}.js"
+  }
+}

@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 99%;
+    --foreground: 222 18% 13%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 18% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 18% 13%;
+    --primary: 222 75% 44%;
+    --primary-foreground: 0 0% 99%;
+    --secondary: 220 16% 96%;
+    --secondary-foreground: 222 18% 22%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 222 10% 46%;
+    --accent: 42 92% 58%;
+    --accent-foreground: 38 70% 18%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 145 65% 40%;
+    --success-foreground: 0 0% 98%;
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
+    --ring: 222 75% 44%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222 24% 10%;
+    --foreground: 220 16% 96%;
+    --card: 222 20% 14%;
+    --card-foreground: 220 16% 96%;
+    --popover: 222 20% 14%;
+    --popover-foreground: 220 16% 96%;
+    --primary: 222 78% 66%;
+    --primary-foreground: 222 24% 10%;
+    --secondary: 222 16% 20%;
+    --secondary-foreground: 220 16% 96%;
+    --muted: 222 16% 20%;
+    --muted-foreground: 220 10% 66%;
+    --accent: 42 78% 60%;
+    --accent-foreground: 38 70% 16%;
+    --destructive: 0 62% 42%;
+    --destructive-foreground: 0 0% 96%;
+    --success: 145 55% 42%;
+    --success-foreground: 222 24% 10%;
+    --border: 222 14% 28%;
+    --input: 222 14% 28%;
+    --ring: 222 78% 66%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+}
+
+@layer utilities {
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--secondary)) 0%,
+      hsl(var(--muted)) 50%,
+      hsl(var(--secondary)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
