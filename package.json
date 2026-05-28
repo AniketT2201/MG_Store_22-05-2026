@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build:tw": "node tailwind.build.js",
-    "build": "heft test --clean --production && heft package-solution --production",
+    "build": "npm run build:tw && heft test --clean --production && heft package-solution --production",
     "start": "heft start --clean",
     "clean": "heft clean",
     "eject-webpack": "heft eject-webpack"

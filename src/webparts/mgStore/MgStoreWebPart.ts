@@ -12,6 +12,10 @@ import * as strings from 'MgStoreWebPartStrings';
 import MgStore from './components/MgStore';
 import { IMgStoreProps } from './components/IMgStoreProps';
 import App from './components/app/App';
+import { initSP } from "./components/services/SharePointService";
+
+// Bundled Tailwind utilities (scoped to .mgStore). Regenerate with: npm run build:tw
+require('./assets/tailwind.css');
 
 export interface IMgStoreWebPartProps {
   description: string;
@@ -37,8 +41,10 @@ export default class MgStoreWebPart extends BaseClientSideWebPart<IMgStoreWebPar
     ReactDom.render(element, this.domElement);
   }
 
-  protected onInit(): Promise<void> {
-    return super.onInit();
+  protected async onInit(): Promise<void> {
+    await super.onInit();
+    // Initialize PnPjs
+    await initSP(this.context);
   }
 
   private loadTailwind(): void {

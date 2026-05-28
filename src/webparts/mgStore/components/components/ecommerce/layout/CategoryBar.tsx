@@ -42,23 +42,38 @@ export function CategoryBar({ goToProducts }: CategoryBarProps) {
   }
 
   return (
-    <div className="border-b border-border bg-secondary/30">
-      <div className="max-w-7xl mx-auto px-4">
-        <nav className="flex items-center gap-1 py-2 overflow-x-auto scrollbar-hide">
-          {categories?.map((category) => (
-            <button
-              key={category.ID}
-              onClick={() => goToProducts(category.ID)}
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors whitespace-nowrap"
-            >
-              {iconMap[category.IconName] || (
-                <MoreHorizontal className="w-4 h-4" />
-              )}
-              <span>{category.Title}</span>
-            </button>
-          ))}
-        </nav>
+    <>
+      <style>
+        {`
+          .CanvasComponent.LCS .grid {
+            display: grid !important;
+          }
+
+          .CanvasComponent.LCS .grid::before,
+          .CanvasComponent.LCS .grid::after {
+            content: none !important;
+            display: none !important;
+          }
+        `}  
+      </style>
+      <div className="border-b border-border bg-secondary/30">
+        <div className="max-w-7xl mx-auto px-4">
+          <nav className="flex items-center gap-1 py-2 overflow-x-auto scrollbar-hide">
+            {categories?.map((category) => (
+              <button
+                key={category.ID}
+                onClick={() => goToProducts(category.ID)}
+                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors whitespace-nowrap"
+              >
+                {iconMap[category.IconName] || (
+                  <MoreHorizontal className="w-4 h-4" />
+                )}
+                <span>{category.Title}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

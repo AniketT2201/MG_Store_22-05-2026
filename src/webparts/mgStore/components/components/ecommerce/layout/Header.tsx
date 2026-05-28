@@ -78,7 +78,7 @@ export function Header({
               <ShoppingCart className="w-5 h-5 text-primary-foreground" />
             </div>
             <span className="text-xl font-bold text-foreground hidden sm:block">
-              SPFx Store
+              MG Store
             </span>
           </button>
 

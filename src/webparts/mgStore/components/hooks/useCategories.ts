@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { CategoryService } from '../services/mockData';
+import { CategoryService } from "../services/SharePointService";
 import { queryKeys } from '../utils/queryKeys';
 import { Category } from '../types';
 

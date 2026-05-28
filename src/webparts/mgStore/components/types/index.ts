@@ -27,7 +27,7 @@ export interface Category {
   Slug: string;
   Description: string;
   ParentCategoryId?: number;
-  ImageUrl?: string;
+  ImageUrl?: { Url: string; Description?: string };
   IconName: string;
   SortOrder: number;
   IsActive: boolean;

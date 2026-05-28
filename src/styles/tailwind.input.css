@@ -79,3 +79,11 @@
     background-position: 200% 0;
   }
 }
+
+.CanvasComponent.LCS .mgStore .grid::before,
+.CanvasComponent.LCS .mgStore .grid::after,
+.CanvasComponent.LCS [class*="mgStore_"] .grid::before,
+.CanvasComponent.LCS [class*="mgStore_"] .grid::after {
+  content: none !important;
+  display: none !important;
+}

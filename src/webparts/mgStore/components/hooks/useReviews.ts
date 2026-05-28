@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ReviewService } from '../services/mockData';
+import { ReviewService } from "../services/SharePointService";
 import { queryKeys } from '../utils/queryKeys';
 import { Review } from '../types';
 

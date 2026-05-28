@@ -53,112 +53,127 @@ export function ProductListPage({ categoryId, categoryName }: ProductListPagePro
     : [{ label: 'All Products' }];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Breadcrumbs */}
-      <Breadcrumbs items={breadcrumbs} />
+    <>
+      <style>
+        {`
+          .CanvasComponent.LCS .grid {
+            display: grid !important;
+          }
 
-      {/* Page Header */}
-      <div className="mt-6 mb-8">
-        <h1 className="text-3xl font-bold text-foreground">
-          {categoryName || 'All Products'}
-        </h1>
-        <p className="text-muted-foreground mt-2">
-          {isLoading ? 'Loading...' : `${filteredProducts.length} products`}
-        </p>
-      </div>
+          .CanvasComponent.LCS .grid::before,
+          .CanvasComponent.LCS .grid::after {
+            content: none !important;
+            display: none !important;
+          }
+        `}  
+      </style>
+      <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumbs */}
+        <Breadcrumbs items={breadcrumbs} />
 
-      <div className="flex gap-8">
-        {/* Desktop Sidebar */}
-        <aside className="hidden lg:block w-64 flex-shrink-0">
-          <div className="sticky top-24">
-            <FilterPanel />
-          </div>
-        </aside>
+        {/* Page Header */}
+        <div className="mt-6 mb-8">
+          <h1 className="text-3xl font-bold text-foreground">
+            {categoryName || 'All Products'}
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            {isLoading ? 'Loading...' : `${filteredProducts.length} products`}
+          </p>
+        </div>
 
-        {/* Main Content */}
-        <div className="flex-1 min-w-0">
-          {/* Toolbar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
-            <div className="flex items-center gap-4">
-              {/* Mobile Filter Button */}
-              <button
-                onClick={() => setShowMobileFilters(true)}
-                className="lg:hidden flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium text-foreground"
-              >
-                <SlidersHorizontal className="w-4 h-4" />
-                Filters
-              </button>
-              
-              {/* View Toggle */}
-              <div className="hidden sm:flex items-center border border-border rounded-lg">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block w-64 flex-shrink-0">
+            <div className="sticky top-24">
+              <FilterPanel />
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <div className="flex-1 min-w-0">
+            {/* Toolbar */}
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
+              <div className="flex items-center gap-4">
+                {/* Mobile Filter Button */}
                 <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 ${viewMode === 'grid' ? 'bg-secondary' : ''}`}
-                  aria-label="Grid view"
+                  onClick={() => setShowMobileFilters(true)}
+                  className="lg:hidden flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium text-foreground"
                 >
-                  <LayoutGrid className="w-4 h-4" />
+                  <SlidersHorizontal className="w-4 h-4" />
+                  Filters
                 </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 ${viewMode === 'list' ? 'bg-secondary' : ''}`}
-                  aria-label="List view"
-                >
-                  <LayoutList className="w-4 h-4" />
-                </button>
+                
+                {/* View Toggle */}
+                <div className="hidden sm:flex items-center border border-border rounded-lg">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`p-2 ${viewMode === 'grid' ? 'bg-secondary' : ''}`}
+                    aria-label="Grid view"
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`p-2 ${viewMode === 'list' ? 'bg-secondary' : ''}`}
+                    aria-label="List view"
+                  >
+                    <LayoutList className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
+
+              <SortDropdown />
             </div>
 
-            <SortDropdown />
-          </div>
+            {/* Active Filters */}
+            <div className="mb-6">
+              <FilterChip />
+            </div>
 
-          {/* Active Filters */}
-          <div className="mb-6">
-            <FilterChip />
-          </div>
-
-          {/* Product Grid */}
-          <ProductGrid
-            products={filteredProducts}
-            isLoading={isLoading}
-            emptyMessage="No products match your filters"
-          />
-        </div>
-      </div>
-
-      {/* Mobile Filter Drawer */}
-      <AnimatePresence>
-        {showMobileFilters && (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowMobileFilters(false)}
-              className="absolute inset-0 bg-foreground/60 backdrop-blur-sm"
+            {/* Product Grid */}
+            <ProductGrid
+              products={filteredProducts}
+              isLoading={isLoading}
+              emptyMessage="No products match your filters"
             />
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 32 }}
-              className="absolute top-0 left-0 h-full w-full max-w-sm bg-background shadow-2xl overflow-y-auto"
-            >
-              <div className="sticky top-0 bg-background z-10 flex items-center justify-between px-6 py-4 border-b border-border">
-                <h2 className="text-lg font-semibold">Filters</h2>
-                <button
-                  onClick={() => setShowMobileFilters(false)}
-                  className="p-2 hover:bg-secondary rounded-full"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="p-6">
-                <FilterPanel />
-              </div>
-            </motion.div>
           </div>
-        )}
-      </AnimatePresence>
-    </div>
+        </div>
+
+        {/* Mobile Filter Drawer */}
+        <AnimatePresence>
+          {showMobileFilters && (
+            <div className="fixed inset-0 z-50 lg:hidden">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setShowMobileFilters(false)}
+                className="absolute inset-0 bg-foreground/60 backdrop-blur-sm"
+              />
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'spring', stiffness: 300, damping: 32 }}
+                className="absolute top-0 left-0 h-full w-full max-w-sm bg-background shadow-2xl overflow-y-auto"
+              >
+                <div className="sticky top-0 bg-background z-10 flex items-center justify-between px-6 py-4 border-b border-border">
+                  <h2 className="text-lg font-semibold">Filters</h2>
+                  <button
+                    onClick={() => setShowMobileFilters(false)}
+                    className="p-2 hover:bg-secondary rounded-full"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="p-6">
+                  <FilterPanel />
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 }
