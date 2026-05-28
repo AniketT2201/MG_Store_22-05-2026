@@ -159,7 +159,7 @@ export function ProfessionalCategories() {
                         className="w-24 h-24 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center mb-4 text-white border border-white/20 group-hover:bg-white/25 transition-all"
                         whileHover={{ scale: 1.1, rotate: 5 }}
                       >
-                        {iconMap[category.IconName] ||
+                        {(category.IconName && iconMap[category.IconName]) ||
                           iconMap["Sparkles"] ||
                           <Sparkles className="w-12 h-12" />}
                       </motion.div>
