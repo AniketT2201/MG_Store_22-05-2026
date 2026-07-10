@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Zap } from "lucide-react";
 import { useFeaturedProducts } from "../../../hooks/useProducts";
@@ -11,15 +11,21 @@ interface ITimer {
   seconds: number;
 }
 
+const CARD_WIDTH = 192; // matches lg:w-48 (48 * 4px)
+const CARD_GAP = 12; // matches gap-3 (3 * 4px)
+const SCROLL_AMOUNT = (CARD_WIDTH + CARD_GAP) * 2; // scroll ~2 cards per click
+
 export function FlashSale() {
   const { data: products, isLoading } = useFeaturedProducts();
-  const [time, setTime] = React.useState<ITimer>({
+  const [time, setTime] = useState<ITimer>({
     hours: 5,
     minutes: 42,
     seconds: 18,
   });
-  const swiperRef = React.useRef<any>(null);
-  const [currentIndex, setCurrentIndex] = React.useState(0);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   // Countdown timer
   useEffect(() => {
@@ -49,12 +55,44 @@ export function FlashSale() {
     return () => clearInterval(timer);
   }, []);
 
-  return (
-    <section className="py-12 lg:py-16 bg-gradient-to-r from-orange-50 to-red-50 relative overflow-hidden">
-      {/* Background accent */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-orange-200/20 rounded-full blur-3xl pointer-events-none" />
+  // Track scroll position so we can disable arrows at the edges
+  const updateScrollState = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 0);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  };
 
-      <div className="container mx-auto px-4 relative z-10">
+  useEffect(() => {
+    requestAnimationFrame(() => {
+        updateScrollState();
+    });
+    const el = scrollRef.current;
+    if (!el) return;
+
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [products]);
+
+  const scrollByAmount = (direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({
+      left: direction === "left" ? -SCROLL_AMOUNT : SCROLL_AMOUNT,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <section className="py-12 lg:py-16 bg-secondary/45 border-y border-border">
+      {/* min-w-0 prevents this row from stretching the page width when its
+          children (the card track) are wider than the viewport */}
+      <div className="container mx-auto px-4 min-w-0">
         {/* Header with Timer */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -63,23 +101,25 @@ export function FlashSale() {
           className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-orange-500 rounded-lg">
-              <Zap className="w-5 h-5 text-white" />
+            <div className="p-2 bg-accent rounded-lg">
+              <Zap className="w-5 h-5 text-accent-foreground" />
             </div>
             <div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
+              <h2 className="text-2xl lg:text-3xl font-semibold text-foreground">
                 Flash Sale
               </h2>
-              <p className="text-xs text-muted-foreground">Limited time offers</p>
+              <p className="text-sm text-muted-foreground">
+                Limited time offers, easy to compare.
+              </p>
             </div>
           </div>
 
           {/* Countdown Timer */}
-          <div className="flex items-center gap-2 bg-white/80 backdrop-blur px-4 py-2 rounded-lg">
+          <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-lg border border-border">
             <span className="text-xs font-medium text-muted-foreground">
               Ends in:
             </span>
-            <div className="flex gap-1 items-center font-bold text-orange-600">
+            <div className="flex gap-1 items-center font-semibold text-foreground tabular-nums">
               <span className="text-lg">
                 {String(time.hours).padStart(2, "0")}
               </span>
@@ -110,18 +150,37 @@ export function FlashSale() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="relative"
+            className="relative min-w-0"
           >
             <div className="hidden lg:flex gap-2 mb-4">
-              <button className="p-2 rounded-lg bg-white hover:bg-secondary transition border border-border">
+              <button
+                type="button"
+                onClick={() => scrollByAmount("left")}
+                disabled={!canScrollLeft}
+                aria-label="Scroll left"
+                className="p-2 rounded-lg bg-white hover:bg-secondary transition border border-border disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
+              >
                 <ArrowLeft className="w-4 h-4" />
               </button>
-              <button className="p-2 rounded-lg bg-white hover:bg-secondary transition border border-border">
+              <button
+                type="button"
+                onClick={() => scrollByAmount("right")}
+                disabled={!canScrollRight}
+                aria-label="Scroll right"
+                className="p-2 rounded-lg bg-white hover:bg-secondary transition border border-border disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
+              >
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="overflow-x-auto scrollbar-hide">
+            {/* min-w-0 + overflow-x-auto here is what actually contains the
+                card track. Without min-w-0 a flex/grid ancestor will size
+                itself to fit the track's full content width instead of
+                letting this element scroll internally. */}
+            <div
+              ref={scrollRef}
+              className="w-full overflow-x-auto scrollbar-hide"
+            >
               <div className="flex gap-3 pb-2">
                 {products?.slice(0, 8).map((product, index) => (
                   <motion.div
@@ -129,12 +188,12 @@ export function FlashSale() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex-none w-full sm:w-56 lg:w-48"
+                    className="flex-none w-48"
                   >
                     <div className="relative group">
                       {/* Flash Sale Badge */}
-                      <div className="absolute top-2 left-2 z-10 bg-orange-500 text-white px-2 py-1 rounded text-xs font-bold">
-                        Flash Sale
+                      <div className="absolute top-2 left-2 z-10 bg-accent text-accent-foreground px-2 py-1 rounded-full text-xs font-medium">
+                        Sale
                       </div>
                       <ProductCard product={product} index={index} />
                     </div>
@@ -145,10 +204,22 @@ export function FlashSale() {
 
             {/* Mobile Navigation */}
             <div className="flex lg:hidden gap-2 mt-4 justify-center">
-              <button className="p-2 rounded-lg bg-white hover:bg-secondary transition border border-border">
+              <button
+                type="button"
+                onClick={() => scrollByAmount("left")}
+                disabled={!canScrollLeft}
+                aria-label="Scroll left"
+                className="p-2 rounded-lg bg-white hover:bg-secondary transition border border-border disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
+              >
                 <ArrowLeft className="w-4 h-4" />
               </button>
-              <button className="p-2 rounded-lg bg-white hover:bg-secondary transition border border-border">
+              <button
+                type="button"
+                onClick={() => scrollByAmount("right")}
+                disabled={!canScrollRight}
+                aria-label="Scroll right"
+                className="p-2 rounded-lg bg-white hover:bg-secondary transition border border-border disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
+              >
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>

@@ -65,17 +65,17 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.3 }}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -2 }}
       className="group"
     >
       <Link to={`/product/${product.ID}`}>
-        <div className="bg-card rounded-xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition-shadow duration-300">
+        <div className="bg-card rounded-lg overflow-hidden border border-border shadow-sm hover:shadow-md transition-shadow duration-300">
           {/* Image Container */}
           <div className="relative aspect-square overflow-hidden bg-secondary">
             <LazyImage
               src={product.Images[0]?.Url || 'https://via.placeholder.com/400'}
               alt={product.Title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
             />
             
             {/* Badges */}
@@ -103,15 +103,15 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             </div>
 
             {/* Action Buttons */}
-            <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200">
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={handleToggleWishlist}
                 className={`p-2.5 rounded-full shadow-md transition-colors ${
                   inWishlist 
-                    ? 'bg-red-500 text-white' 
-                    : 'bg-card text-foreground hover:bg-secondary'
+                    ? 'bg-red-100 text-red-700 border border-red-200'
+                    : 'bg-card text-foreground hover:bg-secondary border border-border'
                 }`}
                 aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
               >
@@ -122,18 +122,18 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={handleQuickView}
-                className="p-2.5 rounded-full bg-card text-foreground hover:bg-secondary shadow-md transition-colors"
+                className="p-2.5 rounded-full bg-card text-foreground hover:bg-secondary shadow-md transition-colors border border-border"
                 aria-label="Quick view"
               >
                 <Eye className="w-4 h-4" />
               </motion.button>
             </div>
 
-            {/* Add to Cart Button - Slides up on hover */}
+            {/* Add to Cart Button */}
             <motion.div
-              initial={{ y: '100%' }}
+              initial={false}
               whileHover={{ y: 0 }}
-              className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300"
+              className="absolute bottom-0 left-0 right-0 translate-y-0 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-300"
             >
               <button
                 onClick={handleAddToCart}
@@ -154,7 +154,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             </p>
             
             {/* Title */}
-            <h3 className="font-medium text-foreground line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+            <h3 className="font-medium text-foreground line-clamp-2 mb-2 group-hover:text-primary transition-colors min-h-10">
               {product.Title}
             </h3>
 

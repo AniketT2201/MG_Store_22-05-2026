@@ -5,19 +5,17 @@ import { ProductCard } from "../product/ProductCard";
 import { stagger, fadeUp } from "../../../utils/animations";
 
 const PRODUCT_TABS = [
-  { id: "trending", label: "🔥 Trending Now", emoji: "🔥" },
-  { id: "bestseller", label: "⭐ Best Seller", emoji: "⭐" },
-  { id: "newarrival", label: "✨ New Arrival", emoji: "✨" },
-  { id: "sale", label: "💰 Special Price", emoji: "💰" },
+  { id: "trending", label: "Trending Now", badge: "Trend" },
+  { id: "bestseller", label: "Best Seller", badge: "Best" },
+  { id: "newarrival", label: "New Arrival", badge: "New" },
+  { id: "sale", label: "Special Price", badge: "Deal" },
 ];
 
 export function TodaysProducts() {
   const { data: products, isLoading } = useFeaturedProducts();
   const [activeTab, setActiveTab] = React.useState("trending");
 
-  // Simulate different product groupings for tabs
-  // In real app, this would come from API
-  const getProductsForTab = (tab: string) => {
+  const getProductsForTab = () => {
     if (!products) return [];
     return products.slice(0, 4);
   };
@@ -25,7 +23,6 @@ export function TodaysProducts() {
   return (
     <section className="py-12 lg:py-16 bg-background">
       <div className="container mx-auto px-4">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -33,30 +30,29 @@ export function TodaysProducts() {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
-            Today's For You
+          <h2 className="text-2xl lg:text-3xl font-semibold text-foreground mb-2">
+            Today's Picks
           </h2>
           <p className="text-muted-foreground text-sm">
             Personalized picks based on your interests
           </p>
         </motion.div>
 
-        {/* Tab Navigation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex flex-wrap gap-2 mb-8 border-b border-border pb-4"
+          className="flex flex-wrap gap-2 mb-8"
         >
           {PRODUCT_TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full font-medium text-sm transition-colors duration-200 border ${
                 activeTab === tab.id
-                  ? "bg-primary text-primary-foreground shadow-lg"
-                  : "bg-card text-foreground hover:bg-secondary border border-border"
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-card text-foreground hover:bg-secondary border-border"
               }`}
             >
               {tab.label}
@@ -64,13 +60,12 @@ export function TodaysProducts() {
           ))}
         </motion.div>
 
-        {/* Products Grid */}
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="aspect-square bg-gray-200 rounded-lg animate-pulse"
+                className="aspect-square bg-muted rounded-lg animate-pulse"
               />
             ))}
           </div>
@@ -82,12 +77,11 @@ export function TodaysProducts() {
             animate="show"
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
           >
-            {getProductsForTab(activeTab)?.map((product, index) => (
+            {getProductsForTab()?.map((product, index) => (
               <motion.div key={product.ID} variants={fadeUp}>
-                {/* Tab-specific Badge */}
                 <div className="relative group">
-                  <div className="absolute top-3 left-3 z-10 bg-primary text-primary-foreground px-2 py-1 rounded text-xs font-bold">
-                    {PRODUCT_TABS.find((t) => t.id === activeTab)?.emoji}
+                  <div className="absolute top-3 left-3 z-10 bg-card/95 text-foreground px-2 py-1 rounded-full text-xs font-medium border border-border">
+                    {PRODUCT_TABS.find((t) => t.id === activeTab)?.badge}
                   </div>
                   <ProductCard product={product} index={index} />
                 </div>
@@ -96,7 +90,6 @@ export function TodaysProducts() {
           </motion.div>
         )}
 
-        {/* View More Button */}
         <div className="mt-8 text-center">
           <button className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors">
             View All Products

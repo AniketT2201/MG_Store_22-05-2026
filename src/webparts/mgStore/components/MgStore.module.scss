@@ -947,3 +947,20 @@ th {
   content: none !important;
   display: none !important;
 }
+
+
+.slick-track {
+    display: flex !important;
+}
+
+.slick-slide {
+    height: inherit !important;
+}
+
+.slick-slide > div {
+    height: 100%;
+}
+
+.slick-list {
+    margin: 0 -8px;
+}

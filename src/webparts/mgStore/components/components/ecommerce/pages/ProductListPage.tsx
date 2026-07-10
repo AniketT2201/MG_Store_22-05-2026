@@ -19,13 +19,14 @@ interface ProductListPageProps {
 
 export function ProductListPage({ categoryId, categoryName }: ProductListPageProps) {
   const { data: products, isLoading } = useProducts(categoryId);
-  const { minPrice, maxPrice, rating, inStock, sortBy } = useFilterStore();
+  const { categoryId: filterCategoryId, minPrice, maxPrice, rating, inStock, sortBy } = useFilterStore();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   // Apply client-side filters
   const filteredProducts = products
     ?.filter((product: Product) => {
+      if (filterCategoryId && product.CategoryId !== filterCategoryId) return false;
       if (minPrice && product.Price < minPrice) return false;
       if (maxPrice && product.Price > maxPrice) return false;
       if (rating && product.AverageRating < rating) return false;
@@ -47,6 +48,18 @@ export function ProductListPage({ categoryId, categoryName }: ProductListPagePro
           return b.ID - a.ID;
       }
     }) || [];
+
+  const categoryCounts = React.useMemo(() => {
+    return products?.reduce((acc: Record<number, number>, product: any) => {
+      const categoryId = product.CategoryId; // adjust if lookup
+
+      if (categoryId) {
+        acc[categoryId] = (acc[categoryId] || 0) + 1;
+      }
+
+      return acc;
+    }, {});
+  }, [products]);
 
   const breadcrumbs = categoryName
     ? [{ label: 'Products', href: '/products' }, { label: categoryName }]
@@ -85,7 +98,7 @@ export function ProductListPage({ categoryId, categoryName }: ProductListPagePro
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-24">
-              <FilterPanel />
+              <FilterPanel categoryCounts={categoryCounts} />
             </div>
           </aside>
 
@@ -167,7 +180,7 @@ export function ProductListPage({ categoryId, categoryName }: ProductListPagePro
                   </button>
                 </div>
                 <div className="p-6">
-                  <FilterPanel />
+                  <FilterPanel categoryCounts={categoryCounts} />
                 </div>
               </motion.div>
             </div>

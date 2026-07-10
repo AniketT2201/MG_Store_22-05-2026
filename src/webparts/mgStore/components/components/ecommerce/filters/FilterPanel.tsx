@@ -6,7 +6,12 @@ import { useCategories } from '../../../hooks/useCategories';
 import { useFilterStore } from '../../../store/filterStore';
 import { accordionContent } from '../../../utils/animations';
 
-export function FilterPanel() {
+
+interface FilterPanelProps {
+  categoryCounts: Record<number, number> | any;
+}
+
+export function FilterPanel({ categoryCounts, } : FilterPanelProps) {
   const { data: categories } = useCategories();
   const {
     categoryId,
@@ -117,7 +122,7 @@ export function FilterPanel() {
               }`}
             >
               <span>{category.Title}</span>
-              <span className="text-xs opacity-60">{category.ProductCount}</span>
+              <span className="text-xs opacity-60">{categoryCounts?.[category.ID] || 0}</span>
             </button>
           ))}
         </div>

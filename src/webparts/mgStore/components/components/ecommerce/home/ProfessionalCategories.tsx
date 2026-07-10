@@ -6,35 +6,25 @@ import {
   Home,
   Dumbbell,
   BookOpen,
-  Sparkles,
+  Grid2X2,
   ShoppingBag,
   Watch,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import * as Icons from "lucide-react";
 import { useCategories } from "../../../hooks/useCategories";
-import { Skeleton } from "../ui/Skeleton";
 
+const FallbackIcon = Icons.Grid2x2;
 const iconMap: Record<string, React.ReactNode> = {
-  Laptop: <Laptop className="w-12 h-12" />,
-  Shirt: <Shirt className="w-12 h-12" />,
-  Home: <Home className="w-12 h-12" />,
-  Dumbbell: <Dumbbell className="w-12 h-12" />,
-  BookOpen: <BookOpen className="w-12 h-12" />,
-  Sparkles: <Sparkles className="w-12 h-12" />,
-  ShoppingBag: <ShoppingBag className="w-12 h-12" />,
-  Watch: <Watch className="w-12 h-12" />,
+  Laptop: <Laptop className="w-8 h-8" />,
+  Shirt: <Shirt className="w-8 h-8" />,
+  Home: <Home className="w-8 h-8" />,
+  Dumbbell: <Dumbbell className="w-8 h-8" />,
+  BookOpen: <BookOpen className="w-8 h-8" />,
+  Sparkles: <Grid2X2 className="w-7 h-7" />,
+  ShoppingBag: <ShoppingBag className="w-8 h-8" />,
+  Watch: <Watch className="w-8 h-8" />,
 };
-
-const categoryGradients = [
-  "from-blue-600 to-blue-400",
-  "from-purple-600 to-purple-400",
-  "from-pink-600 to-pink-400",
-  "from-amber-600 to-amber-400",
-  "from-emerald-600 to-emerald-400",
-  "from-red-600 to-red-400",
-  "from-indigo-600 to-indigo-400",
-  "from-cyan-600 to-cyan-400",
-];
 
 interface CategoryItem {
   ID: number;
@@ -46,176 +36,153 @@ interface CategoryItem {
   };
 }
 
-export function ProfessionalCategories() {
+export const ProfessionalCategories = () => {
   const { data: categories, isLoading } = useCategories();
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
   const itemVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.9 },
+    hidden: { opacity: 0, y: 12 },
     show: {
       opacity: 1,
       y: 0,
-      scale: 1,
       transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-      },
-    },
-    hover: {
-      y: -12,
-      boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 10,
+        duration: 0.3,
       },
     },
   };
 
   return (
-    <section className="py-20 lg:py-28 bg-gradient-to-b from-background via-background to-secondary/5">
-      {/* Section Header */}
-      <div className="container mx-auto px-4 mb-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
-            Shop By Category
-          </span>
-          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Explore Our Collections
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Browse through our carefully curated categories to find exactly what
-            you're looking for
-          </p>
-        </motion.div>
-      </div>
+    <>
+      <style>
+        {`
+          .CanvasComponent.LCS .grid {
+            display: grid !important;
+          }
 
-      {/* Categories Grid */}
-      <div className="container mx-auto px-4">
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <Skeleton key={i} className="aspect-square rounded-2xl" />
-            ))}
+          .CanvasComponent.LCS .grid::before,
+          .CanvasComponent.LCS .grid::after {
+            content: none !important;
+            display: none !important;
+          }
+        `}  
+      </style>
+      <section className="w-full py-12 md:py-16 bg-background">
+        <div className="container mx-auto px-4 md:px-6">
+          {/* Header */}
+          <div className="mb-10">
+            <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-2">
+              Shop By Category
+            </h2>
+            <p className="text-muted-foreground text-sm md:text-base">
+              Find what you need faster with clear product groups.
+            </p>
           </div>
-        ) : (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {categories?.slice(0, 8).map((category: CategoryItem, index) => (
+
+          {/* Categories Grid */}
+          {isLoading ? (
+            <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-9 gap-4">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="h-32 rounded-lg bg-muted animate-pulse" />
+                </div>
+              ))}
+            </div>
+          ) : categories && categories.length > 0 ? (
+            <motion.div
+              variants={{
+                hidden: { opacity: 0 },
+                show: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.08,
+                    delayChildren: 0.1,
+                  },
+                },
+              }}
+              style={{
+                gridTemplateColumns: "repeat(9, 1fr)",
+              }}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-9 gap-4"
+            >
+              {categories.slice(0, 8).map((category: CategoryItem) => (
+                <motion.div
+                  key={category.ID}
+                  variants={itemVariants}
+                  //whileHover={{ scale: 1.08 }}
+                >
+                  <Link
+                    to={`/products?category=${category.ID}`}
+                    className="group flex min-h-36 flex-col items-center text-center p-2"
+                  >
+                    {/* Category Image/Icon Container */}
+                    <div className="relative mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-border bg-secondary">
+                      {/* Background Image */}
+                      {category.ImageUrl?.Url && (
+                        <img
+                          src={category.ImageUrl?.Url}
+                          alt={category.Title}
+                          className="w-full h-full object-cover opacity-95 transition-opacity duration-300 group-hover:opacity-95"
+                        />
+                      )}
+
+                      {/* Icon Overlay */}
+                      {/* <div className="absolute inset-0 flex items-center justify-center bg-card/45">
+                        <div className="text-foreground/75 transition-colors duration-300 group-hover:text-primary">
+                          {(category.IconName && iconMap[category.IconName]) ||
+                            iconMap["Sparkles"] ||
+                            <Grid2X2 className="w-7 h-7" />}
+                        </div>
+                      </div> */}
+                    </div>
+
+                    {/* Category Title */}
+                    <h3 className="text-sm md:text-base font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+                      {category.Title}
+                    </h3>
+
+                    {/* Product Count */}
+                    <p className="text-xs text-muted-foreground">
+                      {category.ProductCount} items
+                    </p>
+                  </Link>
+                </motion.div>
+              ))}
+              {/* View All Category */}
               <motion.div
-                key={category.ID}
                 variants={itemVariants}
-                whileHover="hover"
+                //whileHover={{ scale: 1.08 }}
               >
                 <Link
-                  to={`/products?category=${category.ID}`}
-                  className="group block h-full"
+                  to="/products"
+                  className="group flex min-h-36 flex-col items-center text-center p-2"
                 >
-                  <div
-                    className={`relative h-80 rounded-2xl bg-gradient-to-br ${
-                      categoryGradients[index % categoryGradients.length]
-                    } overflow-hidden border-2 border-white/10 backdrop-blur-sm`}
-                  >
-                    {/* Background pattern overlay */}
-                    <div className="absolute inset-0 opacity-20">
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,white_1px,transparent_1px)] bg-[length:20px_20px]" />
-                    </div>
-
-                    {/* Image background */}
-                    {category.ImageUrl?.Url && (
-                      <img
-                        src={category.ImageUrl.Url}
-                        alt={category.Title}
-                        className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 group-hover:scale-110 transition-all duration-500"
-                      />
-                    )}
-
-                    {/* Content */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
-                      {/* Icon Container */}
-                      <motion.div
-                        className="w-24 h-24 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center mb-4 text-white border border-white/20 group-hover:bg-white/25 transition-all"
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                      >
-                        {(category.IconName && iconMap[category.IconName]) ||
-                          iconMap["Sparkles"] ||
-                          <Sparkles className="w-12 h-12" />}
-                      </motion.div>
-
-                      {/* Category Name */}
-                      <h3 className="text-2xl font-bold text-white mb-2 group-hover:scale-105 transition-transform">
-                        {category.Title}
-                      </h3>
-
-                      {/* Product Count */}
-                      <p className="text-sm text-white/80 mb-4">
-                        {category.ProductCount} Products
-                      </p>
-
-                      {/* CTA Text */}
-                      <motion.div
-                        className="flex items-center gap-2 text-white font-semibold opacity-0 group-hover:opacity-100 transition-all"
-                        initial={{ y: 10, opacity: 0 }}
-                        whileHover={{ y: 0, opacity: 1 }}
-                      >
-                        <span>Shop Now</span>
-                        <span className="text-xl">→</span>
-                      </motion.div>
-                    </div>
-
-                    {/* Border glow effect on hover */}
-                    <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-white/40 transition-all" />
+                  <div className="relative mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary border border-border">
+                    <ShoppingBag
+                      size={26}
+                      className="text-foreground/75 transition-colors duration-300 group-hover:text-primary"
+                    />
                   </div>
+
+                  <h3 className="text-sm md:text-base font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+                    View All
+                  </h3>
+
+                  <p className="text-xs text-muted-foreground">
+                    Categories
+                  </p>
                 </Link>
               </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </div>
+            </motion.div>
+          ) : (
+            <div className="text-center text-gray-500">
+              Categories will load shortly
+            </div>
+          )}
 
-      {/* Bottom CTA */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.6 }}
-        className="flex justify-center mt-16"
-      >
-        <Link
-          to="/products"
-          className="group relative px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl hover:shadow-2xl transition-all hover:scale-105"
-        >
-          <span className="flex items-center gap-2">
-            View All Categories
-            <span className="group-hover:translate-x-1 transition-transform">
-              →
-            </span>
-          </span>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-secondary to-primary opacity-0 group-hover:opacity-50 blur transition-opacity" />
-        </Link>
-      </motion.div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }

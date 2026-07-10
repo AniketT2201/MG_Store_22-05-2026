@@ -21,6 +21,7 @@ import "@pnp/sp/items";
 import "@pnp/sp/files";
 import "@pnp/sp/folders";
 import "@pnp/sp/batching";
+import "@pnp/sp/site-users/web";
 
 import { Product, Category, Review, ProductImage } from "../types";
 
@@ -88,8 +89,10 @@ interface IReviewListItem {
   Rating: number;
   Title: string;
   Body: string;
-  AuthorName: string;             // Split into two columns for simplicity
-  AuthorEmail: string;
+  Author: {
+    Title: string;
+    EMail: string;
+  };
   IsVerified: boolean;
   HelpfulCount: number;
   Created: string;                // SharePoint built-in Created column
@@ -149,8 +152,8 @@ const toReview = (item: IReviewListItem): Review => ({
   Title: item.Title ?? "",
   Body: item.Body ?? "",
   Author: {
-    name: item.AuthorName ?? "",
-    email: item.AuthorEmail ?? "",
+    name: item.Author?.Title ?? "",
+    email: item.Author?.EMail ?? "",
   },
   IsVerified: item.IsVerified ?? false,
   HelpfulCount: item.HelpfulCount ?? 0,
@@ -227,6 +230,143 @@ const fetchImagesForProducts = async (
   }
 
   return map;
+};
+
+// ─── CategoryService ──────────────────────────────────────────────────────────
+
+export const CategoryService = {
+
+  /**
+   * Get all active categories sorted by SortOrder.
+   */
+  getAll: async (): Promise<Category[]> => {
+    try {
+      const items: ICategoryListItem[] = await getSP()
+        .web.lists.getByTitle(LISTS.CATEGORIES)
+        .items.select(
+          "ID", "Title", "Slug", "Description", "ImageUrl",
+          "IconName", "SortOrder", "IsActive", "ProductCount"
+        )
+        .filter("IsActive eq 'Yes'")
+        .orderBy("SortOrder", true)
+        .top(100)();
+
+      return items.map(toCategory);
+    } catch (err) {
+      console.error("[CategoryService.getAll]", err);
+      throw err;
+    }
+  },
+
+  /**
+   * Get a single category by its Slug column value.
+   */
+  getBySlug: async (slug: string): Promise<Category | null> => {
+    try {
+      const items: ICategoryListItem[] = await getSP()
+        .web.lists.getByTitle(LISTS.CATEGORIES)
+        .items.select(
+          "ID", "Title", "Slug", "Description", "ImageUrl",
+          "IconName", "SortOrder", "IsActive", "ProductCount"
+        )
+        .filter(`Slug eq '${slug}' and IsActive eq 'Yes'`)
+        .top(1)();
+
+      return items.length > 0 ? toCategory(items[0]) : null;
+    } catch (err) {
+      console.error("[CategoryService.getBySlug]", err);
+      return null;
+    }
+  },
+
+  /**
+   * Get a single category by ID.
+   */
+  getById: async (id: number): Promise<Category | null> => {
+    try {
+      const raw: ICategoryListItem = await getSP()
+        .web.lists.getByTitle(LISTS.CATEGORIES)
+        .items.getById(id)
+        .select(
+          "ID", "Title", "Slug", "Description", "ImageUrl",
+          "IconName", "SortOrder", "IsActive", "ProductCount"
+        )();
+
+      return raw ? toCategory(raw) : null;
+    } catch (err) {
+      console.error("[CategoryService.getById]", err);
+      return null;
+    }
+  },
+
+  /**
+   * Create a new category.
+   */
+  create: async (category: Omit<Category, "ID">): Promise<number> => {
+    try {
+      const result = await getSP()
+        .web.lists.getByTitle(LISTS.CATEGORIES)
+        .items.add({
+          Title: category.Title,
+          Slug: category.Slug,
+          Description: category.Description,
+          ImageUrl: category.ImageUrl,
+          IconName: category.IconName,
+          SortOrder: category.SortOrder,
+          IsActive: category.IsActive,
+          ProductCount: category.ProductCount ?? 0,
+        });
+
+      return result.data.ID;
+    } catch (err) {
+      console.error("[CategoryService.create]", err);
+      throw err;
+    }
+  },
+
+  /**
+   * Update an existing category.
+   */
+  update: async (
+    id: number,
+    updates: Partial<Omit<Category, "ID">>
+  ): Promise<void> => {
+    try {
+      await getSP()
+        .web.lists.getByTitle(LISTS.CATEGORIES)
+        .items.getById(id)
+        .update(updates as Record<string, unknown>);
+    } catch (err) {
+      console.error("[CategoryService.update]", err);
+      throw err;
+    }
+  },
+
+  /**
+   * Increment the ProductCount for a category by 1.
+   * Called after a new product is created.
+   */
+    recalculateProductCount: async (categoryId: number): Promise<void> => {
+    try {
+
+      const products = await getSP()
+        .web.lists.getByTitle(LISTS.PRODUCTS)
+        .items
+        .select("ID")
+        .filter(`CategoryId eq ${categoryId} and IsActive eq 1`)
+        .top(5000)();
+
+      await getSP()
+        .web.lists.getByTitle(LISTS.CATEGORIES)
+        .items.getById(categoryId)
+        .update({
+          ProductCount: products.length,
+        });
+
+    } catch (err) {
+      console.error("[CategoryService.recalculateProductCount]", err);
+    }
+  },
 };
 
 // ─── ProductService ───────────────────────────────────────────────────────────
@@ -519,8 +659,8 @@ export const ProductService = {
       return {
         ID: (await fileItem.select("ID")()).ID,
         ProductId: productId,
-        Url: `${siteUrl}${fileInfo.ServerRelativeUrl}`,
-        ThumbnailUrl: `${siteUrl}${fileInfo.ServerRelativeUrl}?width=200`,
+        Url: `${siteUrl.split("/sites")[0]}${fileInfo.ServerRelativeUrl}`,
+        ThumbnailUrl: `${siteUrl.split("/sites")[0]}${fileInfo.ServerRelativeUrl}?width=200`,
         AltText: file.name.replace(/\.[^.]+$/, ""),
         IsPrimary: isPrimary,
         SortOrder: sortOrder,
@@ -534,139 +674,128 @@ export const ProductService = {
   },
 };
 
-// ─── CategoryService ──────────────────────────────────────────────────────────
+// ─── MediaService: Fetch images from ProductImages library folders ────────────
 
-export const CategoryService = {
+export const MediaService = {
 
   /**
-   * Get all active categories sorted by SortOrder.
+   * Fetch all banner images from ProductImages library.
+   * Expects images in ProductImages/banner/ folder
+   * Used by HeroCarousel component.
    */
-  getAll: async (): Promise<Category[]> => {
+  getBannerImages: async (): Promise<ProductImage[]> => {
     try {
-      const items: ICategoryListItem[] = await getSP()
-        .web.lists.getByTitle(LISTS.CATEGORIES)
-        .items.select(
-          "ID", "Title", "Slug", "Description", "ImageUrl",
-          "IconName", "SortOrder", "IsActive", "ProductCount"
-        )
-        .filter("IsActive eq 'Yes'")
-        .orderBy("SortOrder", true)
-        .top(100)();
+      const siteUrl = await getSiteUrl();
+      const web = await getSP().web.select("ServerRelativeUrl")();
+      const libraryRelativePath = `${web.ServerRelativeUrl}/ProductImages/banner`;
 
-      return items.map(toCategory);
+      // Try to get folder contents
+      const files = await getSP()
+        .web.getFolderByServerRelativePath(libraryRelativePath)
+        .files.select("ServerRelativeUrl", "Name", "UniqueId")();
+
+      if (!files || files.length === 0) {
+        console.warn("[MediaService] No banner files found in ProductImages/banner/");
+        return [];
+      }
+
+      return files.map((file: any, index: number) => ({
+        ID: index + 1,
+        ProductId: 0,
+        Url: `${siteUrl.split("/sites")[0]}${file.ServerRelativeUrl}`,
+        AltText: file.Name?.replace(/\.[^.]+$/, "") || `Banner ${index + 1}`,
+        IsPrimary: false,
+        SortOrder: index,
+        Width: 1200,
+        Height: 600,
+        ThumbnailUrl: `${siteUrl.split("/sites")[0]}${file.ServerRelativeUrl}?width=400`,
+      }));
     } catch (err) {
-      console.error("[CategoryService.getAll]", err);
-      throw err;
+      console.error("[MediaService.getBannerImages]", err);
+      return [];
     }
   },
 
   /**
-   * Get a single category by its Slug column value.
+   * Fetch category image from ProductImages library.
+   * Expects images in ProductImages/{categoryId}/ folder
+   * Used by ProfessionalCategories component as fallback.
    */
-  getBySlug: async (slug: string): Promise<Category | null> => {
+  getCategoryImage: async (categoryId: number): Promise<ProductImage | null> => {
     try {
-      const items: ICategoryListItem[] = await getSP()
-        .web.lists.getByTitle(LISTS.CATEGORIES)
-        .items.select(
-          "ID", "Title", "Slug", "Description", "ImageUrl",
-          "IconName", "SortOrder", "IsActive", "ProductCount"
-        )
-        .filter(`Slug eq '${slug}' and IsActive eq 'Yes'`)
+      const siteUrl = await getSiteUrl();
+      const web = await getSP().web.select("ServerRelativeUrl")();
+      const folderPath = `${web.ServerRelativeUrl}/ProductImages/${categoryId}`;
+
+      const files = await getSP()
+        .web.getFolderByServerRelativePath(folderPath)
+        .files.select("ServerRelativeUrl", "Name")
         .top(1)();
 
-      return items.length > 0 ? toCategory(items[0]) : null;
+      if (!files || files.length === 0) {
+        return null;
+      }
+
+      const file = files[0];
+      return {
+        ID: categoryId,
+        ProductId: categoryId,
+        Url: `${siteUrl.split("/sites")[0]}${file.ServerRelativeUrl}`,
+        AltText: file.Name?.replace(/\.[^.]+$/, "") || `Category ${categoryId}`,
+        IsPrimary: true,
+        SortOrder: 0,
+        Width: 800,
+        Height: 800,
+        ThumbnailUrl: `${siteUrl.split("/sites")[0]}${file.ServerRelativeUrl}?width=400`,
+      };
     } catch (err) {
-      console.error("[CategoryService.getBySlug]", err);
+      console.error(`[MediaService.getCategoryImage] categoryId=${categoryId}`, err);
       return null;
     }
   },
 
   /**
-   * Get a single category by ID.
+   * Upload banner image to ProductImages/banner/ folder
    */
-  getById: async (id: number): Promise<Category | null> => {
+  uploadBannerImage: async (file: File): Promise<ProductImage> => {
     try {
-      const raw: ICategoryListItem = await getSP()
-        .web.lists.getByTitle(LISTS.CATEGORIES)
-        .items.getById(id)
-        .select(
-          "ID", "Title", "Slug", "Description", "ImageUrl",
-          "IconName", "SortOrder", "IsActive", "ProductCount"
-        )();
+      const siteUrl = await getSiteUrl();
+      const web = await getSP().web.select("ServerRelativeUrl")();
+      const folderPath = `${web.ServerRelativeUrl}/ProductImages/banner`;
 
-      return raw ? toCategory(raw) : null;
+      // Ensure banner folder exists
+      try {
+        await getSP()
+          .web.getFolderByServerRelativePath(`${web.ServerRelativeUrl}/ProductImages`)
+          .folders.addUsingPath("banner");
+      } catch {
+        // Folder might already exist
+      }
+
+      const arrayBuffer = await file.arrayBuffer();
+      const uploadResult = await getSP()
+        .web.getFolderByServerRelativePath(folderPath)
+        .files.addUsingPath(file.name, arrayBuffer, { Overwrite: true });
+
+      const fileInfo = await uploadResult.file.select(
+        "ServerRelativeUrl",
+        "UniqueId"
+      )();
+
+      return {
+        ID: 0,
+        ProductId: 0,
+        Url: `${siteUrl.split("/sites")[0]}${fileInfo.ServerRelativeUrl}`,
+        AltText: file.name.replace(/\.[^.]+$/, ""),
+        IsPrimary: false,
+        SortOrder: 0,
+        Width: 1200,
+        Height: 600,
+        ThumbnailUrl: `${siteUrl.split("/sites")[0]}${fileInfo.ServerRelativeUrl}?width=400`,
+      };
     } catch (err) {
-      console.error("[CategoryService.getById]", err);
-      return null;
-    }
-  },
-
-  /**
-   * Create a new category.
-   */
-  create: async (category: Omit<Category, "ID">): Promise<number> => {
-    try {
-      const result = await getSP()
-        .web.lists.getByTitle(LISTS.CATEGORIES)
-        .items.add({
-          Title: category.Title,
-          Slug: category.Slug,
-          Description: category.Description,
-          ImageUrl: category.ImageUrl,
-          IconName: category.IconName,
-          SortOrder: category.SortOrder,
-          IsActive: category.IsActive,
-          ProductCount: category.ProductCount ?? 0,
-        });
-
-      return result.data.ID;
-    } catch (err) {
-      console.error("[CategoryService.create]", err);
+      console.error("[MediaService.uploadBannerImage]", err);
       throw err;
-    }
-  },
-
-  /**
-   * Update an existing category.
-   */
-  update: async (
-    id: number,
-    updates: Partial<Omit<Category, "ID">>
-  ): Promise<void> => {
-    try {
-      await getSP()
-        .web.lists.getByTitle(LISTS.CATEGORIES)
-        .items.getById(id)
-        .update(updates as Record<string, unknown>);
-    } catch (err) {
-      console.error("[CategoryService.update]", err);
-      throw err;
-    }
-  },
-
-  /**
-   * Increment the ProductCount for a category by 1.
-   * Called after a new product is created.
-   */
-    recalculateProductCount: async (categoryId: number): Promise<void> => {
-    try {
-
-      const products = await getSP()
-        .web.lists.getByTitle(LISTS.PRODUCTS)
-        .items
-        .select("ID")
-        .filter(`CategoryId eq ${categoryId} and IsActive eq 1`)
-        .top(5000)();
-
-      await getSP()
-        .web.lists.getByTitle(LISTS.CATEGORIES)
-        .items.getById(categoryId)
-        .update({
-          ProductCount: products.length,
-        });
-
-    } catch (err) {
-      console.error("[CategoryService.recalculateProductCount]", err);
     }
   },
 };
@@ -684,9 +813,10 @@ export const ReviewService = {
         .web.lists.getByTitle(LISTS.REVIEWS)
         .items.select(
           "ID", "ProductId", "Rating", "Title", "Body",
-          "AuthorName", "AuthorEmail", "IsVerified",
+          "Author/Title", "Author/EMail", "IsVerified",
           "HelpfulCount", "Created"
-        )
+        ) 
+        .expand("Author")
         .filter(`ProductId eq ${productId}`)
         .orderBy("Created", false)
         .top(200)();
@@ -705,6 +835,8 @@ export const ReviewService = {
     review: Omit<Review, "ID" | "CreatedAt" | "HelpfulCount">
   ): Promise<Review> => {
     try {
+      // Ensure the user exists in the site and get their SharePoint ID
+      const User = await getSP().web.ensureUser(review.Author.email);
       const result = await getSP()
         .web.lists.getByTitle(LISTS.REVIEWS)
         .items.add({
@@ -712,8 +844,8 @@ export const ReviewService = {
           Rating: review.Rating,
           Title: review.Title,
           Body: review.Body,
-          AuthorName: review.Author.name,
-          AuthorEmail: review.Author.email,
+          AuthorId: User.data.Id,
+          // AuthorEmail: review.Author.email,
           IsVerified: review.IsVerified ?? false,
           HelpfulCount: 0,
         });
@@ -726,9 +858,10 @@ export const ReviewService = {
         .items.getById(result.data.ID)
         .select(
           "ID", "ProductId", "Rating", "Title", "Body",
-          "AuthorName", "AuthorEmail", "IsVerified",
+          "Author/Title", "Author/EMail", "IsVerified",
           "HelpfulCount", "Created"
-        )();
+        )
+        .expand("Author")();
 
       return toReview(newItem);
     } catch (err) {

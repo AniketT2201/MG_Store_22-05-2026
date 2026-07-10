@@ -500,28 +500,28 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   display: none;
 }
   :root {
-    --background: 0 0% 99%;
+    --background: 210 24% 98%;
     --foreground: 222 18% 13%;
     --card: 0 0% 100%;
     --card-foreground: 222 18% 13%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 18% 13%;
-    --primary: 222 75% 44%;
+    --primary: 217 42% 32%;
     --primary-foreground: 0 0% 99%;
-    --secondary: 220 16% 96%;
+    --secondary: 214 22% 95%;
     --secondary-foreground: 222 18% 22%;
-    --muted: 220 14% 94%;
-    --muted-foreground: 222 10% 46%;
-    --accent: 42 92% 58%;
-    --accent-foreground: 38 70% 18%;
-    --destructive: 0 72% 51%;
+    --muted: 214 18% 93%;
+    --muted-foreground: 222 10% 45%;
+    --accent: 38 62% 68%;
+    --accent-foreground: 35 42% 20%;
+    --destructive: 0 55% 48%;
     --destructive-foreground: 0 0% 98%;
-    --success: 145 65% 40%;
+    --success: 150 42% 38%;
     --success-foreground: 0 0% 98%;
-    --border: 220 13% 88%;
-    --input: 220 13% 88%;
-    --ring: 222 75% 44%;
-    --radius: 0.75rem;
+    --border: 214 16% 86%;
+    --input: 214 16% 86%;
+    --ring: 217 42% 32%;
+    --radius: 0.5rem;
   }
 
   .dark {
@@ -625,6 +625,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .sticky {
   position: sticky;
 }
+.mgStore, [class*="mgStore_"] .-inset-4 {
+  inset: -1rem;
+}
 .mgStore, [class*="mgStore_"] .inset-0 {
   inset: 0px;
 }
@@ -639,14 +642,14 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .-bottom-12 {
   bottom: -3rem;
 }
-.mgStore, [class*="mgStore_"] .-bottom-5 {
-  bottom: -1.25rem;
+.mgStore, [class*="mgStore_"] .-bottom-3 {
+  bottom: -0.75rem;
 }
 .mgStore, [class*="mgStore_"] .-left-12 {
   left: -3rem;
 }
-.mgStore, [class*="mgStore_"] .-left-5 {
-  left: -1.25rem;
+.mgStore, [class*="mgStore_"] .-left-3 {
+  left: -0.75rem;
 }
 .mgStore, [class*="mgStore_"] .-right-0\.5 {
   right: -0.125rem;
@@ -654,8 +657,8 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .-right-12 {
   right: -3rem;
 }
-.mgStore, [class*="mgStore_"] .-right-5 {
-  right: -1.25rem;
+.mgStore, [class*="mgStore_"] .-right-3 {
+  right: -0.75rem;
 }
 .mgStore, [class*="mgStore_"] .-top-0\.5 {
   top: -0.125rem;
@@ -663,14 +666,17 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .-top-12 {
   top: -3rem;
 }
-.mgStore, [class*="mgStore_"] .-top-5 {
-  top: -1.25rem;
+.mgStore, [class*="mgStore_"] .-top-3 {
+  top: -0.75rem;
 }
 .mgStore, [class*="mgStore_"] .bottom-0 {
   bottom: 0px;
 }
 .mgStore, [class*="mgStore_"] .bottom-4 {
   bottom: 1rem;
+}
+.mgStore, [class*="mgStore_"] .bottom-5 {
+  bottom: 1.25rem;
 }
 .mgStore, [class*="mgStore_"] .left-0 {
   left: 0px;
@@ -833,9 +839,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .mb-10 {
   margin-bottom: 2.5rem;
 }
-.mgStore, [class*="mgStore_"] .mb-12 {
-  margin-bottom: 3rem;
-}
 .mgStore, [class*="mgStore_"] .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -874,12 +877,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .mgStore, [class*="mgStore_"] .mt-1\.5 {
   margin-top: 0.375rem;
-}
-.mgStore, [class*="mgStore_"] .mt-10 {
-  margin-top: 2.5rem;
-}
-.mgStore, [class*="mgStore_"] .mt-14 {
-  margin-top: 3.5rem;
 }
 .mgStore, [class*="mgStore_"] .mt-16 {
   margin-top: 4rem;
@@ -937,6 +934,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .mgStore, [class*="mgStore_"] .grid {
   display: grid;
+}
+.mgStore, [class*="mgStore_"] .contents {
+  display: contents;
 }
 .mgStore, [class*="mgStore_"] .hidden {
   display: none;
@@ -997,11 +997,11 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .h-10 {
   height: 2.5rem;
 }
-.mgStore, [class*="mgStore_"] .h-11 {
-  height: 2.75rem;
-}
 .mgStore, [class*="mgStore_"] .h-12 {
   height: 3rem;
+}
+.mgStore, [class*="mgStore_"] .h-14 {
+  height: 3.5rem;
 }
 .mgStore, [class*="mgStore_"] .h-16 {
   height: 4rem;
@@ -1042,8 +1042,14 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .h-7 {
   height: 1.75rem;
 }
+.mgStore, [class*="mgStore_"] .h-72 {
+  height: 18rem;
+}
 .mgStore, [class*="mgStore_"] .h-8 {
   height: 2rem;
+}
+.mgStore, [class*="mgStore_"] .h-80 {
+  height: 20rem;
 }
 .mgStore, [class*="mgStore_"] .h-9 {
   height: 2.25rem;
@@ -1103,8 +1109,14 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .min-h-0 {
   min-height: 0px;
 }
+.mgStore, [class*="mgStore_"] .min-h-10 {
+  min-height: 2.5rem;
+}
 .mgStore, [class*="mgStore_"] .min-h-16 {
   min-height: 4rem;
+}
+.mgStore, [class*="mgStore_"] .min-h-36 {
+  min-height: 9rem;
 }
 .mgStore, [class*="mgStore_"] .min-h-4 {
   min-height: 1rem;
@@ -1129,9 +1141,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .mgStore, [class*="mgStore_"] .w-10 {
   width: 2.5rem;
-}
-.mgStore, [class*="mgStore_"] .w-11 {
-  width: 2.75rem;
 }
 .mgStore, [class*="mgStore_"] .w-12 {
   width: 3rem;
@@ -1280,6 +1289,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .flex-1 {
   flex: 1 1 0%;
 }
+.mgStore, [class*="mgStore_"] .flex-none {
+  flex: none;
+}
 .mgStore, [class*="mgStore_"] .flex-shrink-0 {
   flex-shrink: 0;
 }
@@ -1324,12 +1336,16 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-translate-x: 1px;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+.mgStore, [class*="mgStore_"] .translate-y-0 {
+  --tw-translate-y: 0px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
 .mgStore, [class*="mgStore_"] .translate-y-0\.5 {
   --tw-translate-y: 0.125rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
-.mgStore, [class*="mgStore_"] .translate-y-2 {
-  --tw-translate-y: 0.5rem;
+.mgStore, [class*="mgStore_"] .translate-y-1 {
+  --tw-translate-y: 0.25rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .mgStore, [class*="mgStore_"] .translate-y-\[-50\%\] {
@@ -1482,8 +1498,8 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .gap-1\.5 {
   gap: 0.375rem;
 }
-.mgStore, [class*="mgStore_"] .gap-16 {
-  gap: 4rem;
+.mgStore, [class*="mgStore_"] .gap-10 {
+  gap: 2.5rem;
 }
 .mgStore, [class*="mgStore_"] .gap-2 {
   gap: 0.5rem;
@@ -1496,9 +1512,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .mgStore, [class*="mgStore_"] .gap-4 {
   gap: 1rem;
-}
-.mgStore, [class*="mgStore_"] .gap-5 {
-  gap: 1.25rem;
 }
 .mgStore, [class*="mgStore_"] .gap-6 {
   gap: 1.5rem;
@@ -1592,9 +1605,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .rounded-\[2px\] {
   border-radius: 2px;
 }
-.mgStore, [class*="mgStore_"] .rounded-\[2rem\] {
-  border-radius: 2rem;
-}
 .mgStore, [class*="mgStore_"] .rounded-\[4px\] {
   border-radius: 4px;
 }
@@ -1636,6 +1646,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .mgStore, [class*="mgStore_"] .border-\[1\.5px\] {
   border-width: 1.5px;
+}
+.mgStore, [class*="mgStore_"] .border-y {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
 }
 .mgStore, [class*="mgStore_"] .border-b {
   border-bottom-width: 1px;
@@ -1683,12 +1697,18 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .border-primary\/20 {
   border-color: hsl(var(--primary) / 0.2);
 }
+.mgStore, [class*="mgStore_"] .border-primary\/30 {
+  border-color: hsl(var(--primary) / 0.3);
+}
 .mgStore, [class*="mgStore_"] .border-red-200 {
   --tw-border-opacity: 1;
   border-color: rgb(254 202 202 / var(--tw-border-opacity, 1));
 }
 .mgStore, [class*="mgStore_"] .border-transparent {
   border-color: transparent;
+}
+.mgStore, [class*="mgStore_"] .border-white\/70 {
+  border-color: rgb(255 255 255 / 0.7);
 }
 .mgStore, [class*="mgStore_"] .border-l-transparent {
   border-left-color: transparent;
@@ -1728,6 +1748,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .bg-background\/95 {
   background-color: hsl(var(--background) / 0.95);
 }
+.mgStore, [class*="mgStore_"] .bg-black\/15 {
+  background-color: rgb(0 0 0 / 0.15);
+}
 .mgStore, [class*="mgStore_"] .bg-black\/50 {
   background-color: rgb(0 0 0 / 0.5);
 }
@@ -1738,6 +1761,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .bg-card {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--card) / var(--tw-bg-opacity, 1));
+}
+.mgStore, [class*="mgStore_"] .bg-card\/45 {
+  background-color: hsl(var(--card) / 0.45);
 }
 .mgStore, [class*="mgStore_"] .bg-card\/50 {
   background-color: hsl(var(--card) / 0.5);
@@ -1771,6 +1797,14 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .bg-foreground\/60 {
   background-color: hsl(var(--foreground) / 0.6);
 }
+.mgStore, [class*="mgStore_"] .bg-gray-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+}
+.mgStore, [class*="mgStore_"] .bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1));
+}
 .mgStore, [class*="mgStore_"] .bg-input {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--input) / var(--tw-bg-opacity, 1));
@@ -1792,6 +1826,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .mgStore, [class*="mgStore_"] .bg-primary\/10 {
   background-color: hsl(var(--primary) / 0.1);
+}
+.mgStore, [class*="mgStore_"] .bg-primary\/15 {
+  background-color: hsl(var(--primary) / 0.15);
 }
 .mgStore, [class*="mgStore_"] .bg-primary\/20 {
   background-color: hsl(var(--primary) / 0.2);
@@ -1815,6 +1852,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .bg-secondary\/30 {
   background-color: hsl(var(--secondary) / 0.3);
 }
+.mgStore, [class*="mgStore_"] .bg-secondary\/45 {
+  background-color: hsl(var(--secondary) / 0.45);
+}
 .mgStore, [class*="mgStore_"] .bg-secondary\/50 {
   background-color: hsl(var(--secondary) / 0.5);
 }
@@ -1825,18 +1865,29 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
+.mgStore, [class*="mgStore_"] .bg-white\/55 {
+  background-color: rgb(255 255 255 / 0.55);
+}
+.mgStore, [class*="mgStore_"] .bg-white\/90 {
+  background-color: rgb(255 255 255 / 0.9);
+}
 .mgStore, [class*="mgStore_"] .bg-\[radial-gradient\(circle_at_30\%_30\%\2c rgba\(0\2c 0\2c 0\2c 0\.03\)_1px\2c transparent_1px\)\] {
   background-image: radial-gradient(circle at 30% 30%,rgba(0,0,0,0.03) 1px,transparent 1px);
-}
-.mgStore, [class*="mgStore_"] .bg-\[radial-gradient\(circle_at_50\%_50\%\2c white_1px\2c transparent_1px\)\] {
-  background-image: radial-gradient(circle at 50% 50%,white 1px,transparent 1px);
 }
 .mgStore, [class*="mgStore_"] .bg-gradient-to-br {
   background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
 }
+.mgStore, [class*="mgStore_"] .bg-gradient-to-t {
+  background-image: linear-gradient(to top, var(--tw-gradient-stops));
+}
 .mgStore, [class*="mgStore_"] .from-amber-500\/20 {
   --tw-gradient-from: rgb(245 158 11 / 0.2) var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(245 158 11 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+.mgStore, [class*="mgStore_"] .from-black\/20 {
+  --tw-gradient-from: rgb(0 0 0 / 0.2) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(0 0 0 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 .mgStore, [class*="mgStore_"] .from-blue-500\/20 {
@@ -1859,6 +1910,11 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-gradient-to: rgb(236 72 153 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
+.mgStore, [class*="mgStore_"] .from-primary\/10 {
+  --tw-gradient-from: hsl(var(--primary) / 0.1) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsl(var(--primary) / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
 .mgStore, [class*="mgStore_"] .from-primary\/20 {
   --tw-gradient-from: hsl(var(--primary) / 0.2) var(--tw-gradient-from-position);
   --tw-gradient-to: hsl(var(--primary) / 0) var(--tw-gradient-to-position);
@@ -1878,6 +1934,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-gradient-to: hsl(var(--background) / 0)  var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), hsl(var(--background) / 1) var(--tw-gradient-via-position), var(--tw-gradient-to);
 }
+.mgStore, [class*="mgStore_"] .via-black\/5 {
+  --tw-gradient-to: rgb(0 0 0 / 0)  var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), rgb(0 0 0 / 0.05) var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
 .mgStore, [class*="mgStore_"] .to-cyan-500\/20 {
   --tw-gradient-to: rgb(6 182 212 / 0.2) var(--tw-gradient-to-position);
 }
@@ -1893,6 +1953,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .to-rose-500\/20 {
   --tw-gradient-to: rgb(244 63 94 / 0.2) var(--tw-gradient-to-position);
 }
+.mgStore, [class*="mgStore_"] .to-secondary\/10 {
+  --tw-gradient-to: hsl(var(--secondary) / 0.1) var(--tw-gradient-to-position);
+}
 .mgStore, [class*="mgStore_"] .to-secondary\/20 {
   --tw-gradient-to: hsl(var(--secondary) / 0.2) var(--tw-gradient-to-position);
 }
@@ -1902,11 +1965,11 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .to-teal-500\/20 {
   --tw-gradient-to: rgb(20 184 166 / 0.2) var(--tw-gradient-to-position);
 }
+.mgStore, [class*="mgStore_"] .to-transparent {
+  --tw-gradient-to: transparent var(--tw-gradient-to-position);
+}
 .mgStore, [class*="mgStore_"] .bg-\[length\:20px_20px\] {
   background-size: 20px 20px;
-}
-.mgStore, [class*="mgStore_"] .bg-\[length\:30px_30px\] {
-  background-size: 30px 30px;
 }
 .mgStore, [class*="mgStore_"] .fill-amber-400 {
   fill: #fbbf24;
@@ -1990,13 +2053,13 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   padding-left: 1rem;
   padding-right: 1rem;
 }
+.mgStore, [class*="mgStore_"] .px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
 .mgStore, [class*="mgStore_"] .px-6 {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-}
-.mgStore, [class*="mgStore_"] .px-7 {
-  padding-left: 1.75rem;
-  padding-right: 1.75rem;
 }
 .mgStore, [class*="mgStore_"] .px-8 {
   padding-left: 2rem;
@@ -2013,6 +2076,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .py-1\.5 {
   padding-top: 0.375rem;
   padding-bottom: 0.375rem;
+}
+.mgStore, [class*="mgStore_"] .py-10 {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
 }
 .mgStore, [class*="mgStore_"] .py-12 {
   padding-top: 3rem;
@@ -2284,6 +2351,17 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .text-foreground\/50 {
   color: hsl(var(--foreground) / 0.5);
 }
+.mgStore, [class*="mgStore_"] .text-foreground\/75 {
+  color: hsl(var(--foreground) / 0.75);
+}
+.mgStore, [class*="mgStore_"] .text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
+}
+.mgStore, [class*="mgStore_"] .text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
+}
 .mgStore, [class*="mgStore_"] .text-green-500 {
   --tw-text-opacity: 1;
   color: rgb(34 197 94 / var(--tw-text-opacity, 1));
@@ -2306,9 +2384,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .text-primary-foreground {
   --tw-text-opacity: 1;
   color: hsl(var(--primary-foreground) / var(--tw-text-opacity, 1));
-}
-.mgStore, [class*="mgStore_"] .text-primary-foreground\/80 {
-  color: hsl(var(--primary-foreground) / 0.8);
 }
 .mgStore, [class*="mgStore_"] .text-red-500 {
   --tw-text-opacity: 1;
@@ -2339,14 +2414,17 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .opacity-0 {
   opacity: 0;
 }
-.mgStore, [class*="mgStore_"] .opacity-10 {
-  opacity: 0.1;
+.mgStore, [class*="mgStore_"] .opacity-100 {
+  opacity: 1;
 }
 .mgStore, [class*="mgStore_"] .opacity-20 {
   opacity: 0.2;
 }
 .mgStore, [class*="mgStore_"] .opacity-30 {
   opacity: 0.3;
+}
+.mgStore, [class*="mgStore_"] .opacity-35 {
+  opacity: 0.35;
 }
 .mgStore, [class*="mgStore_"] .opacity-50 {
   opacity: 0.5;
@@ -2436,6 +2514,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 }
 .mgStore, [class*="mgStore_"] .blur-sm {
   --tw-blur: blur(4px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.mgStore, [class*="mgStore_"] .blur-xl {
+  --tw-blur: blur(24px);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 .mgStore, [class*="mgStore_"] .filter {
@@ -2710,6 +2792,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   border-color: hsl(var(--border) / var(--tw-border-opacity, 1));
 }
 
+.mgStore, [class*="mgStore_"] .hover\:border-primary\/40:hover {
+  border-color: hsl(var(--primary) / 0.4);
+}
+
 .mgStore, [class*="mgStore_"] .hover\:border-primary\/50:hover {
   border-color: hsl(var(--primary) / 0.5);
 }
@@ -2728,10 +2814,6 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   background-color: hsl(var(--background) / 0.2);
 }
 
-.mgStore, [class*="mgStore_"] .hover\:bg-background\/90:hover {
-  background-color: hsl(var(--background) / 0.9);
-}
-
 .mgStore, [class*="mgStore_"] .hover\:bg-destructive\/90:hover {
   background-color: hsl(var(--destructive) / 0.9);
 }
@@ -2748,6 +2830,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .hover\:bg-primary:hover {
   --tw-bg-opacity: 1;
   background-color: hsl(var(--primary) / var(--tw-bg-opacity, 1));
+}
+
+.mgStore, [class*="mgStore_"] .hover\:bg-primary\/10:hover {
+  background-color: hsl(var(--primary) / 0.1);
 }
 
 .mgStore, [class*="mgStore_"] .hover\:bg-primary\/20:hover {
@@ -2778,6 +2864,11 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 
 .mgStore, [class*="mgStore_"] .hover\:bg-secondary\/80:hover {
   background-color: hsl(var(--secondary) / 0.8);
+}
+
+.mgStore, [class*="mgStore_"] .hover\:bg-white:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
 .mgStore, [class*="mgStore_"] .hover\:text-accent-foreground:hover {
@@ -2832,6 +2923,12 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] .hover\:shadow-lg:hover {
   --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.mgStore, [class*="mgStore_"] .hover\:shadow-md:hover {
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
@@ -2995,6 +3092,12 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.mgStore, [class*="mgStore_"] .group:hover .group-hover\:scale-\[1\.03\] {
+  --tw-scale-x: 1.03;
+  --tw-scale-y: 1.03;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .mgStore, [class*="mgStore_"] .group:hover .group-hover\:text-primary {
   --tw-text-opacity: 1;
   color: hsl(var(--primary) / var(--tw-text-opacity, 1));
@@ -3010,6 +3113,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 
 .mgStore, [class*="mgStore_"] .group:hover .group-hover\:opacity-30 {
   opacity: 0.3;
+}
+
+.mgStore, [class*="mgStore_"] .group:hover .group-hover\:opacity-45 {
+  opacity: 0.45;
 }
 
 .mgStore, [class*="mgStore_"] .group.destructive .group-\[\.destructive\]\:border-muted\/40 {
@@ -3729,6 +3836,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     display: flex;
   }
 
+  .mgStore, [class*="mgStore_"] .sm\:w-56 {
+    width: 14rem;
+  }
+
   .mgStore, [class*="mgStore_"] .sm\:max-w-lg {
     max-width: 32rem;
   }
@@ -3741,12 +3852,20 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .mgStore, [class*="mgStore_"] .sm\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .mgStore, [class*="mgStore_"] .sm\:flex-row {
     flex-direction: row;
   }
 
   .mgStore, [class*="mgStore_"] .sm\:flex-col {
     flex-direction: column;
+  }
+
+  .mgStore, [class*="mgStore_"] .sm\:items-center {
+    align-items: center;
   }
 
   .mgStore, [class*="mgStore_"] .sm\:justify-end {
@@ -3785,9 +3904,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     text-align: left;
   }
 
-  .mgStore, [class*="mgStore_"] .sm\:text-5xl {
-    font-size: 3rem;
-    line-height: 1;
+  .mgStore, [class*="mgStore_"] .sm\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 }
 
@@ -3795,6 +3914,14 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 
   .mgStore, [class*="mgStore_"] .md\:absolute {
     position: absolute;
+  }
+
+  .mgStore, [class*="mgStore_"] .md\:left-6 {
+    left: 1.5rem;
+  }
+
+  .mgStore, [class*="mgStore_"] .md\:right-6 {
+    right: 1.5rem;
   }
 
   .mgStore, [class*="mgStore_"] .md\:block {
@@ -3813,6 +3940,10 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     height: 8rem;
   }
 
+  .mgStore, [class*="mgStore_"] .md\:h-96 {
+    height: 24rem;
+  }
+
   .mgStore, [class*="mgStore_"] .md\:w-32 {
     width: 8rem;
   }
@@ -3827,6 +3958,11 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 
   .mgStore, [class*="mgStore_"] .md\:max-w-\[420px\] {
     max-width: 420px;
+  }
+
+  .mgStore, [class*="mgStore_"] .md\:translate-y-full {
+    --tw-translate-y: 100%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   }
 
   .mgStore, [class*="mgStore_"] .md\:grid-cols-2 {
@@ -3857,8 +3993,32 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     padding: 3rem;
   }
 
+  .mgStore, [class*="mgStore_"] .md\:p-8 {
+    padding: 2rem;
+  }
+
+  .mgStore, [class*="mgStore_"] .md\:px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .mgStore, [class*="mgStore_"] .md\:py-16 {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
   .mgStore, [class*="mgStore_"] .md\:text-left {
     text-align: left;
+  }
+
+  .mgStore, [class*="mgStore_"] .md\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .mgStore, [class*="mgStore_"] .md\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 
   .mgStore, [class*="mgStore_"] .md\:text-sm {
@@ -3873,6 +4033,15 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   .mgStore, [class*="mgStore_"] .md\:after\:hidden::after {
     content: var(--tw-content);
     display: none;
+  }
+
+  .mgStore, [class*="mgStore_"] .group:hover .md\:group-hover\:translate-y-0 {
+    --tw-translate-y: 0px;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .mgStore, [class*="mgStore_"] .group:hover .md\:group-hover\:opacity-100 {
+    opacity: 1;
   }
 
   .mgStore, [class*="mgStore_"] .peer[data-variant="inset"] ~ .md\:peer-data-\[variant\=inset\]\:m-2 {
@@ -3924,12 +4093,16 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     height: 5rem;
   }
 
-  .mgStore, [class*="mgStore_"] .lg\:h-24 {
-    height: 6rem;
+  .mgStore, [class*="mgStore_"] .lg\:h-\[430px\] {
+    height: 430px;
   }
 
-  .mgStore, [class*="mgStore_"] .lg\:w-24 {
-    width: 6rem;
+  .mgStore, [class*="mgStore_"] .lg\:w-20 {
+    width: 5rem;
+  }
+
+  .mgStore, [class*="mgStore_"] .lg\:w-48 {
+    width: 12rem;
   }
 
   .mgStore, [class*="mgStore_"] .lg\:grid-cols-1 {
@@ -3969,24 +4142,24 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     padding-right: 2rem;
   }
 
+  .mgStore, [class*="mgStore_"] .lg\:py-12 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .mgStore, [class*="mgStore_"] .lg\:py-14 {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
   .mgStore, [class*="mgStore_"] .lg\:py-16 {
     padding-top: 4rem;
     padding-bottom: 4rem;
   }
 
-  .mgStore, [class*="mgStore_"] .lg\:py-20 {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-  }
-
-  .mgStore, [class*="mgStore_"] .lg\:py-24 {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
-  }
-
-  .mgStore, [class*="mgStore_"] .lg\:text-4xl {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
+  .mgStore, [class*="mgStore_"] .lg\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
   }
 
   .mgStore, [class*="mgStore_"] .lg\:text-5xl {
@@ -3994,14 +4167,9 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     line-height: 1;
   }
 
-  .mgStore, [class*="mgStore_"] .lg\:text-6xl {
-    font-size: 3.75rem;
-    line-height: 1;
-  }
-
-  .mgStore, [class*="mgStore_"] .lg\:text-base {
-    font-size: 1rem;
-    line-height: 1.5rem;
+  .mgStore, [class*="mgStore_"] .lg\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
 }
 
@@ -4464,12 +4632,4 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
 .mgStore, [class*="mgStore_"] a.\[a\&\]\:hover\:text-accent-foreground:hover {
   --tw-text-opacity: 1;
   color: hsl(var(--accent-foreground) / var(--tw-text-opacity, 1));
-}
-
-.CanvasComponent.LCS .mgStore .grid::before,
-.CanvasComponent.LCS .mgStore .grid::after,
-.CanvasComponent.LCS [class*="mgStore_"] .grid::before,
-.CanvasComponent.LCS [class*="mgStore_"] .grid::after {
-  content: none !important;
-  display: none !important;
 }

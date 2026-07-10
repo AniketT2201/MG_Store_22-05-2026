@@ -87,6 +87,18 @@ export function SearchResultsPage({ initialQuery = "", onClose }: SearchResultsP
     return filtered;
   }, [products, debouncedQuery, minPrice, maxPrice, categoryId, sortBy]);
 
+  const categoryCounts = React.useMemo(() => {
+    return products?.reduce((acc: Record<number, number>, product: any) => {
+      const categoryId = product.CategoryId; // adjust if lookup
+
+      if (categoryId) {
+        acc[categoryId] = (acc[categoryId] || 0) + 1;
+      }
+
+      return acc;
+    }, {});
+  }, [products]);
+
   const hasActiveFilters =
     !!categoryId ||
     minPrice !== undefined ||
@@ -225,7 +237,7 @@ export function SearchResultsPage({ initialQuery = "", onClose }: SearchResultsP
                   exit={{ opacity: 0, width: 0 }}
                   className="flex-shrink-0 overflow-hidden"
                 >
-                  <FilterPanel />
+                  <FilterPanel categoryCounts={categoryCounts}/>
                 </motion.aside>
               )}
             </AnimatePresence>

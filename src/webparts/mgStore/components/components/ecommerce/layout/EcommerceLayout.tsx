@@ -42,8 +42,8 @@ React.FC<EcommerceLayoutProps> = ({
     history.push(query ? `/search?q=${encodeURIComponent(query)}` : "/search");
   };
 
+  // CategoryBar only shows on products page, not homepage (homepage has ProfessionalCategories)
   const showCategoryBar =
-    location.pathname === "/" ||
     location.pathname === "/products";
 
   return (

@@ -59,23 +59,23 @@ export function Header({
 
   return (
     <header
-      className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+      className={`sticky top-0 z-40 w-full transition-all duration-300 border-b ${
         isScrolled
-          ? "bg-background/95 backdrop-blur-md shadow-sm border-b border-border"
-          : "bg-background"
+          ? "bg-background/95 backdrop-blur-md shadow-sm border-border"
+          : "bg-background border-border"
       }`}
     >
       {/* Promo Banner */}
-      <div className="bg-primary text-primary-foreground text-center py-2 text-sm font-medium">
+      {/* <div className="bg-primary text-primary-foreground text-center py-2 text-sm font-medium">
         Free shipping on orders over $99 | Use code SAVE20 for 20% off
-      </div>
+      </div> */}
 
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <button onClick={goToHome} className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <ShoppingCart className="w-5 h-5 text-primary-foreground" />
+            <div className="w-10 h-10 bg-secondary border border-border rounded-lg flex items-center justify-center">
+              <ShoppingCart className="w-5 h-5 text-primary" />
             </div>
             <span className="text-xl font-bold text-foreground hidden sm:block">
               MG Store
@@ -112,7 +112,7 @@ export function Header({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute top-full left-0 mt-2 w-56 bg-card rounded-xl shadow-xl border border-border py-2"
+                    className="absolute top-full left-0 mt-2 w-56 bg-card rounded-lg shadow-lg border border-border py-2"
                   >
                     {categories?.map((category) => (
                       <button
