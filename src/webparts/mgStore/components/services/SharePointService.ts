@@ -23,7 +23,7 @@ import "@pnp/sp/folders";
 import "@pnp/sp/batching";
 import "@pnp/sp/site-users/web";
 
-import { Product, Category, Review, ProductImage } from "../types";
+import { Product, Category, Review, ProductImage, Feedback, FeedbackCategory } from "../types";
 
 // ─── SP instance (singleton) ─────────────────────────────────────────────────
 
@@ -45,6 +45,7 @@ const LISTS = {
   CATEGORIES: "Categories",
   REVIEWS: "Reviews",
   PRODUCT_IMAGES: "ProductImages", // Document library name
+  FEEDBACK: "SiteFeedback",
 } as const;
 
 // ─── Raw SharePoint response shapes ──────────────────────────────────────────
@@ -110,6 +111,19 @@ interface IProductImageListItem {
   Height: number;
 }
 
+interface IFeedbackListItem {
+  ID: number;
+  Category: string;
+  Message: string;
+  Rating: number | null;
+  Author: {
+    Title: string;
+    EMail: string;
+  };
+  PageUrl: string;
+  Created: string;
+}
+
 // ─── Mappers: SP raw → app types ─────────────────────────────────────────────
 
 const toProduct = (item: IProductListItem, images: ProductImage[]): Product => ({
@@ -173,6 +187,19 @@ const toProductImage = (
   Width: item.Width ?? 800,
   Height: item.Height ?? 800,
   ThumbnailUrl: `${siteUrl.split("/sites")[0]}${item.ServerRelativeUrl}?width=200`,
+});
+
+const toFeedback = (item: IFeedbackListItem): Feedback => ({
+  ID: item.ID,
+  Category: (item.Category as FeedbackCategory) ?? "Other",
+  Message: item.Message ?? "",
+  Rating: item.Rating ?? undefined,
+  Author: {
+    name: item.Author?.Title ?? "",
+    email: item.Author?.EMail ?? "",
+  },
+  PageUrl: item.PageUrl ?? "",
+  CreatedAt: item.Created,
 });
 
 // ─── Helper: get absolute site URL ───────────────────────────────────────────
@@ -891,6 +918,53 @@ export const ReviewService = {
   },
 
   /**
+   * Update an existing review (edit own review). Recalculates the
+   * product's AverageRating if the rating value changed.
+   */
+  update: async (
+    reviewId: number,
+    productId: number,
+    updates: Partial<Pick<Review, "Rating" | "Title" | "Body">>
+  ): Promise<void> => {
+    try {
+      const payload: Record<string, unknown> = {};
+      if (updates.Rating !== undefined) payload.Rating = updates.Rating;
+      if (updates.Title !== undefined) payload.Title = updates.Title;
+      if (updates.Body !== undefined) payload.Body = updates.Body;
+
+      await getSP()
+        .web.lists.getByTitle(LISTS.REVIEWS)
+        .items.getById(reviewId)
+        .update(payload);
+
+      if (updates.Rating !== undefined) {
+        await ReviewService._recalculateProductRating(productId);
+      }
+    } catch (err) {
+      console.error("[ReviewService.update]", err);
+      throw err;
+    }
+  },
+
+  /**
+   * Delete a review (delete own review) and recalculate the product's
+   * AverageRating/ReviewCount afterwards.
+   */
+  delete: async (reviewId: number, productId: number): Promise<void> => {
+    try {
+      await getSP()
+        .web.lists.getByTitle(LISTS.REVIEWS)
+        .items.getById(reviewId)
+        .delete();
+
+      await ReviewService._recalculateProductRating(productId);
+    } catch (err) {
+      console.error("[ReviewService.delete]", err);
+      throw err;
+    }
+  },
+
+  /**
    * Recalculates AverageRating and ReviewCount on the Product item.
    * Called internally after a new review is submitted.
    */
@@ -916,6 +990,64 @@ export const ReviewService = {
         .update({ AverageRating: avg, ReviewCount: count });
     } catch (err) {
       console.error("[ReviewService._recalculateProductRating]", err);
+    }
+  },
+};
+
+// ─── FeedbackService ──────────────────────────────────────────────────────────
+// Backs the site-wide feedback widget (Section: "Feedback — must have").
+// Requires a "SiteFeedback" list with columns:
+//   Category (Choice: Bug/Suggestion/Compliment/Other), Message (Multiline text),
+//   Rating (Number, optional), AuthorName (Text), AuthorEmail (Text), PageUrl (Text)
+// Author identity should come from the logged-in user's context
+// (CurrentUserContext), not a free-text form field.
+
+export const FeedbackService = {
+  /**
+   * Submit a new piece of feedback.
+   */
+  submit: async (
+    feedback: Omit<Feedback, "ID" | "CreatedAt">
+  ): Promise<number> => {
+    try {
+      const User = await getSP().web.ensureUser(feedback.Author.email);
+      const result = await getSP()
+        .web.lists.getByTitle(LISTS.FEEDBACK)
+        .items.add({
+          Category: feedback.Category,
+          Message: feedback.Message,
+          Rating: feedback.Rating ?? null,
+          AuthorId: User.data.Id,
+          PageUrl: feedback.PageUrl,
+        });
+
+      return result.data.ID;
+    } catch (err) {
+      console.error("[FeedbackService.submit]", err);
+      throw err;
+    }
+  },
+
+  /**
+   * Get the most recent feedback entries. Intended for an admin view;
+   * not currently surfaced anywhere in the customer-facing UI.
+   */
+  getRecent: async (top = 100): Promise<Feedback[]> => {
+    try {
+      const items: IFeedbackListItem[] = await getSP()
+        .web.lists.getByTitle(LISTS.FEEDBACK)
+        .items.select(
+          "ID", "Category", "Message", "Rating",
+          "Author/Title", "Author/EMail", "PageUrl", "Created"
+        )
+        .expand("Author")
+        .orderBy("Created", false)
+        .top(top)();
+
+      return items.map(toFeedback);
+    } catch (err) {
+      console.error("[FeedbackService.getRecent]", err);
+      throw err;
     }
   },
 };

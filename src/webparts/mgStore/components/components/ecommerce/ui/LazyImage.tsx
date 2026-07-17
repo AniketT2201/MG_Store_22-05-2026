@@ -39,8 +39,9 @@ export function LazyImage({ src, alt, className, fill, sizes }: LazyImageProps) 
         onLoad={() => setIsLoaded(true)}
         onError={() => setHasError(true)}
         className={clsx(
-          'w-full h-full object-cover',
-          !isLoaded && 'invisible'
+        "w-full h-full object-cover",
+          className,
+          !isLoaded && "invisible"
         )}
         loading="lazy"
       />

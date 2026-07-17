@@ -10,6 +10,7 @@ import { ProductCard } from "./ProductCard";
 import { ProductCardSkeleton } from "../ui/Skeleton";
 import { stagger, fadeUp } from "../../../utils/animations";
 import type { Product } from "../../../types";
+import { Link } from "react-router-dom";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -143,13 +144,13 @@ export function RelatedProducts({
           transition={{ delay: 0.3 }}
           className="text-center mt-8"
         >
-          <a
-            href={`/products?category=${categoryId}`}
+          <Link
+            to={`/products?category=${categoryId}`}
             className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
           >
             View all in this category
             <ChevronRight className="h-4 w-4" />
-          </a>
+          </Link>
         </motion.div>
       </div>
     </section>

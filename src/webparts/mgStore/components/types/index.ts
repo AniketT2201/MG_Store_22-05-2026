@@ -78,6 +78,22 @@ export interface ProductImage {
   ThumbnailUrl: string;
 }
 
+export type FeedbackCategory = 'Bug' | 'Suggestion' | 'Compliment' | 'Other';
+
+export interface Feedback {
+  ID: number;
+  Category: FeedbackCategory;
+  Message: string;
+  /** Optional 1-5 satisfaction rating; undefined if the user skipped it. */
+  Rating?: number;
+  Author: {
+    name: string;
+    email: string;
+  };
+  PageUrl: string;
+  CreatedAt: string;
+}
+
 export interface FilterState {
   categoryId?: number;
   minPrice?: number;

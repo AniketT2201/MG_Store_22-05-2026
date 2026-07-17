@@ -1,17 +1,22 @@
 import * as React from "react";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, ShoppingCart, Truck, Shield, RotateCcw, Minus, Plus, Star, Share2 } from 'lucide-react';
 import { useProductDetail } from '../../../hooks/useProductDetail';
 import { useCartStore } from '../../../store/cartStore';
 import { useWishlistStore } from '../../../store/wishlistStore';
+import { useRecentlyViewedStore } from '../../../store/recentlyViewedStore';
 import { ProductImageGallery } from '../../../components/ecommerce/product/ProductImageGallery';
+import { RelatedProducts, RecentlyViewed } from '../../../components/ecommerce/product/RelatedProducts';
 import { ReviewList } from '../../../components/ecommerce/reviews/ReviewList';
+import { ErrorBoundary } from '../../../components/ecommerce/ui/ErrorBoundary';
 import { Breadcrumbs } from '../../../components/ecommerce/ui/Breadcrumbs';
 import { Badge } from '../../../components/ecommerce/ui/Badge';
 import { ProductDetailSkeleton } from '../../../components/ecommerce/ui/Skeleton';
 import { formatCurrency, calculateDiscount } from '../../../utils/currency';
+import { FeedbackWidget } from "../../../components/ecommerce/feedback/FeedbackWidget";
 import toast from 'react-hot-toast';
+import { createPortal } from "react-dom";
 
 
 interface ProductDetailPageProps {
@@ -22,8 +27,17 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
   const { data: product, isLoading } = useProductDetail(productId);
   const { addItem, openCart } = useCartStore();
   const { isInWishlist, toggleItem } = useWishlistStore();
+  const { productIds: recentlyViewedIds, addProduct: recordRecentlyViewed } = useRecentlyViewedStore();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<'description' | 'reviews' | 'specs'>('description');
+
+  useEffect(() => {
+    if (product?.ID) {
+      recordRecentlyViewed(product.ID);
+    }
+    // Only re-run when the product itself changes, not on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.ID]);
 
   if (isLoading) {
     return (
@@ -291,11 +305,16 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
             )}
 
             {activeTab === 'reviews' && (
-              <ReviewList
-                productId={product.ID}
-                averageRating={product.AverageRating}
-                totalReviews={product.ReviewCount}
-              />
+              <ErrorBoundary section="reviews">
+                <div className="mt-6">
+                  <FeedbackWidget variant="inline" />
+                </div>
+                <ReviewList
+                  productId={product.ID}
+                  averageRating={product.AverageRating}
+                  totalReviews={product.ReviewCount}
+                />
+              </ErrorBoundary>
             )}
 
             {activeTab === 'specs' && (
@@ -341,6 +360,22 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Related Products */}
+      <ErrorBoundary section="related products">
+        <RelatedProducts
+          currentProductId={product.ID}
+          categoryId={product.CategoryId}
+          tags={product.Tags}
+        />
+      </ErrorBoundary>
+
+      {/* Recently Viewed (excluding the product currently being viewed) */}
+      <ErrorBoundary section="recently viewed products">
+        <RecentlyViewed
+          productIds={recentlyViewedIds.filter((id) => id !== product.ID)}
+        />
+      </ErrorBoundary>
     </>
   );
 }

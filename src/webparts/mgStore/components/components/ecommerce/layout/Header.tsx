@@ -15,6 +15,7 @@ import { useWishlistStore } from "../../../store/wishlistStore";
 import { useUIStore } from "../../../store/uiStore";
 import { useCategories } from "../../../hooks/useCategories";
 import { bounceScale } from "../../../utils/animations";
+import  MGStoreLogo  from "../../../../assets/MG-Motor-Logo.png";
 
 interface HeaderProps {
   goToHome: () => void;
@@ -75,7 +76,7 @@ export function Header({
           {/* Logo */}
           <button onClick={goToHome} className="flex items-center gap-2">
             <div className="w-10 h-10 bg-secondary border border-border rounded-lg flex items-center justify-center">
-              <ShoppingCart className="w-5 h-5 text-primary" />
+              <img src={MGStoreLogo} alt="MG Store Logo" className="w-full h-full object-contain" />
             </div>
             <span className="text-xl font-bold text-foreground hidden sm:block">
               MG Store
@@ -99,11 +100,11 @@ export function Header({
             >
               <button className="flex items-center gap-1 text-foreground hover:text-primary transition-colors font-medium">
                 Categories
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${
-                    showCategories ? "rotate-180" : ""
-                  }`}
-                />
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      showCategories ? "rotate-180" : ""
+                    }`}
+                  />
               </button>
 
               <AnimatePresence>

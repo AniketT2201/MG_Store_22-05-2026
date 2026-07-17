@@ -1,5 +1,8 @@
 @import '~@fluentui/react/dist/sass/References.scss';
 
+#spSiteHeader {
+  display: none !important;
+}
 .mgStore {
   width: 100%;
   max-width: 100%;

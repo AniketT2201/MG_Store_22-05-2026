@@ -263,3 +263,9 @@ input[type="range"]::-moz-range-thumb {
   background: oklch(0.45 0.18 260 / 0.2);
   color: var(--foreground);
 }
+
+
+
+#spSiteHeader {
+  display: none !important;
+}

@@ -34,7 +34,9 @@ export default class MgStoreWebPart extends BaseClientSideWebPart<IMgStoreWebPar
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
+        userDisplayName: this.context.pageContext.user.displayName,
+        userEmail: this.context.pageContext.user.email,
+        userLoginName: this.context.pageContext.user.loginName
       }
     );
 

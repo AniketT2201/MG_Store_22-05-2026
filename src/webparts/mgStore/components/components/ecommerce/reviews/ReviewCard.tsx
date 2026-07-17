@@ -1,15 +1,47 @@
 import * as React from "react";
 import { motion } from 'framer-motion';
-import { ThumbsUp, CheckCircle } from 'lucide-react';
+import { ThumbsUp, CheckCircle, Pencil, Trash2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { Review } from '../../../types';
 import { StarRating } from './StarRating';
 import { formatDistanceToNow } from 'date-fns';
+import { useCurrentUser } from '../../providers/CurrentUserContext';
+import { useMarkHelpful, useDeleteReview } from '../../../hooks/useReviews';
 
 interface ReviewCardProps {
   review: Review;
+  onEdit?: (review: Review) => void;
 }
 
-export function ReviewCard({ review }: ReviewCardProps) {
+export function ReviewCard({ review, onEdit }: ReviewCardProps) {
+  const currentUser = useCurrentUser();
+  const { mutate: markHelpful, hasMarkedHelpful, isLoading: isMarking } = useMarkHelpful();
+  const deleteReview = useDeleteReview();
+
+  const isOwnReview =
+    !!currentUser.email &&
+    review.Author.email?.toLowerCase() === currentUser.email.toLowerCase();
+  const alreadyMarkedHelpful = hasMarkedHelpful(review.ID);
+
+  const handleHelpful = () => {
+    if (alreadyMarkedHelpful || isMarking) return;
+    markHelpful(review.ID);
+  };
+
+  const handleDelete = () => {
+    // eslint-disable-next-line no-alert
+    const confirmed = window.confirm("Delete your review? This can't be undone.");
+    if (!confirmed) return;
+
+    deleteReview.mutate(
+      { reviewId: review.ID, productId: review.ProductId },
+      {
+        onSuccess: () => toast.success("Your review was deleted"),
+        onError: () => toast.error("We couldn't delete your review. Please try again."),
+      }
+    );
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -27,6 +59,11 @@ export function ReviewCard({ review }: ReviewCardProps) {
                 Verified Purchase
               </span>
             )}
+            {isOwnReview && (
+              <span className="inline-flex items-center text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                Your review
+              </span>
+            )}
           </div>
           <p className="text-xs text-muted-foreground">
             {formatDistanceToNow(new Date(review.CreatedAt), { addSuffix: true })}
@@ -37,14 +74,45 @@ export function ReviewCard({ review }: ReviewCardProps) {
 
       {/* Content */}
       <h4 className="font-medium text-foreground mb-2">{review.Title}</h4>
-      <p className="text-muted-foreground text-sm leading-relaxed">{review.Body}</p>
+      <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
+        {review.Body}
+      </p>
 
       {/* Footer */}
       <div className="mt-4 flex items-center gap-4">
-        <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-          <ThumbsUp className="w-4 h-4" />
-          Helpful ({review.HelpfulCount})
+        <button
+          onClick={handleHelpful}
+          disabled={alreadyMarkedHelpful || isMarking}
+          className={`flex items-center gap-2 text-sm transition-colors ${
+            alreadyMarkedHelpful
+              ? 'text-primary cursor-default'
+              : 'text-muted-foreground hover:text-foreground'
+          } disabled:opacity-70`}
+          aria-pressed={alreadyMarkedHelpful}
+        >
+          <ThumbsUp className={`w-4 h-4 ${alreadyMarkedHelpful ? 'fill-current' : ''}`} />
+          {alreadyMarkedHelpful ? 'Marked helpful' : 'Helpful'} ({review.HelpfulCount})
         </button>
+
+        {isOwnReview && (
+          <>
+            <button
+              onClick={() => onEdit?.(review)}
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              Edit
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={deleteReview.isLoading}
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-red-500 transition-colors disabled:opacity-60"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Delete
+            </button>
+          </>
+        )}
       </div>
     </motion.div>
   );

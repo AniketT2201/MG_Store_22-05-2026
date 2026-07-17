@@ -4633,3 +4633,8 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   --tw-text-opacity: 1;
   color: hsl(var(--accent-foreground) / var(--tw-text-opacity, 1));
 }
+
+
+#spSiteHeader {
+  display: none !important;
+}

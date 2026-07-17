@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import styles from "../MgStore.module.scss";
 import type { IMgStoreProps } from "../IMgStoreProps";
 import { Providers } from "../components/providers/Providers";
+import { CurrentUserProvider } from "../components/providers/CurrentUserContext";
+import { ErrorBoundary } from "../components/ecommerce/ui/ErrorBoundary";
 
 import { EcommerceLayout } from "../components/ecommerce/layout/EcommerceLayout";
 
@@ -13,6 +15,7 @@ import { ProductListPage } from "../components/ecommerce/pages/ProductListPage";
 import { ProductDetailPage } from "../components/ecommerce/pages/ProductDetailPage";
 import { CartPage } from "../components/ecommerce/pages/CartPage";
 import { WishlistPage } from "../components/ecommerce/pages/WishlistPage";
+import { WishlistSharedPage } from "../components/ecommerce/pages/WishlistSharedPage";
 import { SearchResultsPage } from "../components/ecommerce/pages/SearchResultsPage";
 
 import { pageTransition } from "../utils/animations";
@@ -54,6 +57,21 @@ const SearchRoute: React.FC = () => {
   return <SearchResultsPage initialQuery={query} />;
 };
 
+const NotFoundRoute: React.FC = () => (
+  <div className="container mx-auto px-4 py-24 text-center">
+    <h1 className="text-3xl font-bold text-foreground mb-3">Page not found</h1>
+    <p className="text-muted-foreground mb-8">
+      The page you&apos;re looking for doesn&apos;t exist or may have moved.
+    </p>
+    <a
+      href="#/"
+      className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+    >
+      Back to home
+    </a>
+  </div>
+);
+
 const EcommerceRoutes: React.FC = () => {
   const location = useLocation();
 
@@ -69,19 +87,34 @@ const EcommerceRoutes: React.FC = () => {
           className="flex-1"
         >
           <Switch location={location}>
-            <Route exact path="/" component={HomePage} />
-            <Route exact path="/products" component={ProductsRoute} />
+            <Route exact path="/" render={() => (
+              <ErrorBoundary section="the homepage"><HomePage /></ErrorBoundary>
+            )} />
+            <Route exact path="/products" render={() => (
+              <ErrorBoundary section="the product list"><ProductsRoute /></ErrorBoundary>
+            )} />
             <Route
               exact
               path="/product/:productId"
               render={({ match }) => (
-                <ProductDetailRoute productId={match.params.productId} />
+                <ErrorBoundary section="this product">
+                  <ProductDetailRoute productId={match.params.productId} />
+                </ErrorBoundary>
               )}
             />
-            <Route exact path="/cart" component={CartPage} />
-            <Route exact path="/wishlist" component={WishlistPage} />
-            <Route exact path="/search" component={SearchRoute} />
-            <Route component={HomePage} />
+            <Route exact path="/cart" render={() => (
+              <ErrorBoundary section="your cart"><CartPage /></ErrorBoundary>
+            )} />
+            <Route exact path="/wishlist" render={() => (
+              <ErrorBoundary section="your wishlist"><WishlistPage /></ErrorBoundary>
+            )} />
+            <Route exact path="/wishlist/shared" render={() => (
+              <ErrorBoundary section="this shared wishlist"><WishlistSharedPage /></ErrorBoundary>
+            )} />
+            <Route exact path="/search" render={() => (
+              <ErrorBoundary section="search results"><SearchRoute /></ErrorBoundary>
+            )} />
+            <Route component={NotFoundRoute} />
           </Switch>
         </motion.main>
       </AnimatePresence>
@@ -99,11 +132,21 @@ export default function App(
         props.hasTeamsContext ? styles.teams : ""
       }`}
     >
-      <Providers>
-        <Router>
-          <EcommerceRoutes />
-        </Router>
-      </Providers>
+      <ErrorBoundary section="MGStore">
+        <CurrentUserProvider
+          user={{
+            displayName: props.userDisplayName,
+            email: props.userEmail,
+            loginName: props.userLoginName,
+          }}
+        >
+          <Providers>
+            <Router>
+              <EcommerceRoutes />
+            </Router>
+          </Providers>
+        </CurrentUserProvider>
+      </ErrorBoundary>
     </section>
   );
 }

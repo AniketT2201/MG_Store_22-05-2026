@@ -1,11 +1,13 @@
 import * as React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, ArrowRight, TrendingUp } from "lucide-react";
+import { Search, X, ArrowRight, TrendingUp, Clock, Sparkles } from "lucide-react";
 import { useUIStore } from "../../../store/uiStore";
-import { useProductSearch } from "../../../hooks/useProducts";
+import { useProducts, useProductSearch } from "../../../hooks/useProducts";
+import { useSearchHistoryStore } from "../../../store/searchHistoryStore";
 import { useDebounce } from "use-debounce";
 import { formatCurrency } from "../../../utils/currency";
+import { fuzzySuggest } from "../../../utils/fuzzySearch";
 import { LazyImage } from "../ui/LazyImage";
 import { Skeleton } from "../ui/Skeleton";
 
@@ -21,6 +23,12 @@ export function SearchModal({ goToSearch, goToProduct }: SearchModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { data: results, isLoading } = useProductSearch(debouncedQuery);
+  // Already-cached full product list (shares the query cache with the rest
+  // of the app, so this doesn't add a new network call) used to power
+  // fuzzy "did you mean" suggestions when the strict search comes up empty.
+  const { data: allProducts } = useProducts();
+
+  const { recentSearches, addSearch, removeSearch } = useSearchHistoryStore();
 
   useEffect(() => {
     if (isSearchOpen && inputRef.current) {
@@ -50,20 +58,31 @@ export function SearchModal({ goToSearch, goToProduct }: SearchModalProps) {
     "Running Shoes",
   ];
 
+  const fuzzySuggestions = useMemo(() => {
+    if (!allProducts || !debouncedQuery || (results && results.length > 0)) return [];
+    return fuzzySuggest(debouncedQuery, allProducts, { limit: 4, threshold: 0.62 });
+  }, [allProducts, debouncedQuery, results]);
+
   const handleProductClick = (productId: number) => {
+    if (debouncedQuery) addSearch(debouncedQuery);
     closeSearch();
     goToProduct(productId);
   };
 
   const handleViewAll = () => {
+    if (query) addSearch(query);
     closeSearch();
     goToSearch(query);
+  };
+
+  const handleRecentSearchClick = (term: string) => {
+    setQuery(term);
   };
 
   return (
     <AnimatePresence>
       {isSearchOpen && (
-        <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 z-50 mt-8">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -89,6 +108,9 @@ export function SearchModal({ goToSearch, goToProduct }: SearchModalProps) {
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && query.trim()) handleViewAll();
+                  }}
                   placeholder="Search products..."
                   className="flex-1 text-xl bg-transparent border-none outline-none placeholder:text-muted-foreground text-foreground"
                 />
@@ -111,22 +133,55 @@ export function SearchModal({ goToSearch, goToProduct }: SearchModalProps) {
               {/* Search Results */}
               <div className="py-6 max-h-[60vh] overflow-y-auto">
                 {query.length < 3 ? (
-                  // Show popular searches when no query
-                  <div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                      <TrendingUp className="w-4 h-4" />
-                      Popular Searches
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {popularSearches.map((term) => (
-                        <button
-                          key={term}
-                          onClick={() => setQuery(term)}
-                          className="px-4 py-2 bg-secondary rounded-full text-sm text-foreground hover:bg-secondary/80 transition-colors"
-                        >
-                          {term}
-                        </button>
-                      ))}
+                  // Show recent + popular searches when no query
+                  <div className="space-y-6">
+                    {recentSearches.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                          <Clock className="w-4 h-4" />
+                          Recent Searches
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {recentSearches.map((term) => (
+                            <div
+                              key={term}
+                              className="flex items-center gap-1 pl-4 pr-2 py-2 bg-secondary rounded-full text-sm text-foreground"
+                            >
+                              <button
+                                onClick={() => handleRecentSearchClick(term)}
+                                className="hover:underline"
+                              >
+                                {term}
+                              </button>
+                              <button
+                                onClick={() => removeSearch(term)}
+                                aria-label={`Remove "${term}" from recent searches`}
+                                className="p-1 hover:bg-background/60 rounded-full transition-colors"
+                              >
+                                <X className="w-3 h-3 text-muted-foreground" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                        <TrendingUp className="w-4 h-4" />
+                        Popular Searches
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {popularSearches.map((term) => (
+                          <button
+                            key={term}
+                            onClick={() => setQuery(term)}
+                            className="px-4 py-2 bg-secondary rounded-full text-sm text-foreground hover:bg-secondary/80 transition-colors"
+                          >
+                            {term}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 ) : isLoading ? (
@@ -187,14 +242,43 @@ export function SearchModal({ goToSearch, goToProduct }: SearchModalProps) {
                     )}
                   </div>
                 ) : (
-                  // No results
-                  <div className="text-center py-8">
+                  // No exact results — offer fuzzy "did you mean" suggestions
+                  <div className="text-center py-4">
                     <p className="text-muted-foreground mb-2">
                       No results found for &quot;{query}&quot;
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground mb-6">
                       Try different keywords or browse our categories
                     </p>
+
+                    {fuzzySuggestions.length > 0 && (
+                      <div className="text-left max-w-md mx-auto">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3 justify-center">
+                          <Sparkles className="w-4 h-4" />
+                          Did you mean...
+                        </div>
+                        <div className="space-y-2">
+                          {fuzzySuggestions.map((product) => (
+                            <button
+                              key={product.ID}
+                              onClick={() => handleProductClick(product.ID)}
+                              className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-secondary transition-colors w-full text-left"
+                            >
+                              <div className="w-10 h-10 rounded-lg overflow-hidden bg-secondary flex-shrink-0">
+                                <LazyImage
+                                  src={product.Images[0]?.Url || ""}
+                                  alt={product.Title}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <span className="text-sm font-medium text-foreground">
+                                {product.Title}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

@@ -19,7 +19,7 @@ interface ProductListPageProps {
 
 export function ProductListPage({ categoryId, categoryName }: ProductListPageProps) {
   const { data: products, isLoading } = useProducts(categoryId);
-  const { categoryId: filterCategoryId, minPrice, maxPrice, rating, inStock, sortBy } = useFilterStore();
+  const { categoryId: filterCategoryId, minPrice, maxPrice, rating, inStock, sortBy, resetFilters } = useFilterStore();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
@@ -148,6 +148,8 @@ export function ProductListPage({ categoryId, categoryName }: ProductListPagePro
               products={filteredProducts}
               isLoading={isLoading}
               emptyMessage="No products match your filters"
+              emptyDescription="Try widening your price range, clearing a filter, or checking a different category."
+              emptyAction={{ label: 'Clear all filters', onClick: resetFilters }}
             />
           </div>
         </div>

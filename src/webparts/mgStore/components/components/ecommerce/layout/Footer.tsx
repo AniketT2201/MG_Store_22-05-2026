@@ -160,31 +160,64 @@ export function Footer({ goToHome, goToProducts }: FooterProps) {
 
             {/* Contact Info */}
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider mb-5">
                 Contact Us
               </h3>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-background/50 flex-shrink-0 mt-0.5" />
-                  <span className="text-background/70 text-sm">
-                    123 SharePoint Drive
-                    <br />
-                    Microsoft City, WA 98052
-                  </span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 text-background/50 flex-shrink-0" />
-                  <span className="text-background/70 text-sm">
-                    +1 (555) 123-4567
-                  </span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 text-background/50 flex-shrink-0" />
-                  <span className="text-background/70 text-sm">
-                    support@spfxstore.com
-                  </span>
-                </li>
-              </ul>
+
+              <div className="space-y-3">
+                <div className="flex items-start gap-4 rounded-xl bg-background/5 hover:bg-background/10 transition-all duration-300 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-background/10">
+                    <MapPin className="w-5 h-5 text-background" />
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-background/50 mb-1">
+                      Address
+                    </p>
+                    <p className="text-sm text-background/80 leading-6">
+                      123 SharePoint Drive
+                      <br />
+                      Microsoft City, WA 98052
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 rounded-xl bg-background/5 hover:bg-background/10 transition-all duration-300 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-background/10">
+                    <Phone className="w-5 h-5 text-background" />
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-background/50 mb-1">
+                      Phone
+                    </p>
+                    <a
+                      href="tel:+15551234567"
+                      className="text-sm text-background/80 hover:text-background transition-colors"
+                    >
+                      +1 (555) 123-4567
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 rounded-xl bg-background/5 hover:bg-background/10 transition-all duration-300 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-background/10">
+                    <Mail className="w-5 h-5 text-background" />
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-background/50 mb-1">
+                      Email
+                    </p>
+                    <a
+                      href="mailto:support@spfxstore.com"
+                      className="text-sm text-background/80 hover:text-background transition-colors break-all"
+                    >
+                      support@spfxstore.com
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -194,8 +227,7 @@ export function Footer({ goToHome, goToProducts }: FooterProps) {
           <div className="max-w-7xl mx-auto px-4 py-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-background/50 text-sm">
-                {currentYear} SPFx Store. Built with SharePoint Framework, React &
-                PnP.js
+                {currentYear} SPFx Store. Built with SharePoint Framework.
               </p>
               <div className="flex items-center gap-6">
                 <button className="text-background/50 hover:text-background text-sm transition-colors">

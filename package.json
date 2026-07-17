@@ -117,6 +117,7 @@
     "@rushstack/heft": "1.1.2"
   },
   "resolutions": {
-    "@types/react": "17.0.45"
+    "@types/react": "17.0.45",
+    "@radix-ui/react-slot": "^1.0.2"
   }
 }

@@ -18,33 +18,33 @@ export const HeroCarousel: React.FC = () => {
   const [showControls, setShowControls] = useState(false);
 
   // Fetch banner images from SharePoint
-  useEffect(() => {
-    const fetchBannerImages = async () => {
-      try {
-        setIsLoading(true);
-        const images = await MediaService.getBannerImages();
+  const fetchBannerImages = async () => {
+    try {
+      setIsLoading(true);
+      const images = await MediaService.getBannerImages();
 
-        if (!images || images.length === 0) {
-          console.warn("No banner images found in SharePoint");
-          setSlides([]);
-          return;
-        }
-
-        const heroSlides: HeroSlide[] = images.map((img, index) => ({
-          id: index + 1,
-          image: img,
-        }));
-
-        setSlides(heroSlides);
-      } catch (error) {
-        console.error("Failed to fetch banner images:", error);
+      if (!images || images.length === 0) {
+        console.warn("No banner images found in SharePoint");
         setSlides([]);
-      } finally {
-        setIsLoading(false);
+        return;
       }
-    };
 
-    fetchBannerImages();
+      const heroSlides: HeroSlide[] = images.map((img, index) => ({
+        id: index + 1,
+        image: img,
+      }));
+
+      setSlides(heroSlides);
+    } catch (error) {
+      console.error("Failed to fetch banner images:", error);
+      setSlides([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+   useEffect(() => {
+    void fetchBannerImages();
   }, []);
 
   const slideVariants = {

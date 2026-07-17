@@ -1,11 +1,12 @@
 import * as React from "react";
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, ArrowRight, Trash2, ShoppingCart } from 'lucide-react';
-import { Link } from "react-router-dom";
+import { Heart, Trash2, ShoppingCart, Share2 } from 'lucide-react';
+import { Link, useHistory } from "react-router-dom";
 import { useWishlistStore } from '../../../store/wishlistStore';
 import { useCartStore } from '../../../store/cartStore';
 import { Breadcrumbs } from '../../../components/ecommerce/ui/Breadcrumbs';
 import { LazyImage } from '../../../components/ecommerce/ui/LazyImage';
+import { EmptyState } from '../../../components/ecommerce/ui/EmptyState';
 import { formatCurrency } from '../../../utils/currency';
 import { stagger, fadeUp } from '../../../utils/animations';
 import toast from 'react-hot-toast';
@@ -14,12 +15,37 @@ import toast from 'react-hot-toast';
 export function WishlistPage() {
   const { items, removeItem, clearWishlist } = useWishlistStore();
   const { addItem, openCart } = useCartStore();
+  const history = useHistory();
 
   const handleAddToCart = (item: typeof items[0]) => {
     addItem(item.Product);
     removeItem(item.ProductId);
     toast.success(`${item.Product.Title} moved to cart!`);
     openCart();
+  };
+
+  const handleShareWishlist = async () => {
+    if (items.length === 0) return;
+
+    const ids = items.map((item) => item.ProductId).join(',');
+    const shareUrl = `${window.location.origin}${window.location.pathname}#/wishlist/shared?items=${ids}`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'My Wishlist', url: shareUrl });
+        return;
+      }
+    } catch {
+      // User cancelled the native share sheet or it's unsupported — fall
+      // through to clipboard copy below.
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success('Wishlist link copied to clipboard!');
+    } catch {
+      toast.error("Couldn't copy the link — copy it from your browser's address bar instead.");
+    }
   };
 
   return (
@@ -45,38 +71,33 @@ export function WishlistPage() {
         <div className="flex items-center justify-between mt-6 mb-8">
           <h1 className="text-3xl font-bold text-foreground">My Wishlist</h1>
           {items.length > 0 && (
-            <button
-              onClick={clearWishlist}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-red-500 transition-colors"
-            >
-              <Trash2 className="w-4 h-4" />
-              Clear Wishlist
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleShareWishlist}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Share2 className="w-4 h-4" />
+                Share Wishlist
+              </button>
+              <button
+                onClick={clearWishlist}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-red-500 transition-colors"
+              >
+                <Trash2 className="w-4 h-4" />
+                Clear Wishlist
+              </button>
+            </div>
           )}
         </div>
 
         {items.length === 0 ? (
           // Empty Wishlist
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-16"
-          >
-            <div className="w-24 h-24 bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
-              <Heart className="w-12 h-12 text-muted-foreground" />
-            </div>
-            <h2 className="text-2xl font-semibold text-foreground mb-3">Your wishlist is empty</h2>
-            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              Save items you love by clicking the heart icon on any product. {"They'll"} appear here for easy access later.
-            </p>
-            <Link
-              to="/products"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors"
-            >
-              Explore Products
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
+          <EmptyState
+            icon="wishlist"
+            title="Your wishlist is empty"
+            description="Save items you love by clicking the heart icon on any product. They'll appear here for easy access later."
+            action={{ label: 'Explore Products', onClick: () => history.push('/products') }}
+          />
         ) : (
           // Wishlist Items
           <motion.div
