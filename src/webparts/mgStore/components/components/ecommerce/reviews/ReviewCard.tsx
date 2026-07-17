@@ -1,7 +1,7 @@
 import * as React from "react";
 import { motion } from 'framer-motion';
 import { ThumbsUp, CheckCircle, Pencil, Trash2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from '../ui/Toast';
 import { Review } from '../../../types';
 import { StarRating } from './StarRating';
 import { formatDistanceToNow } from 'date-fns';

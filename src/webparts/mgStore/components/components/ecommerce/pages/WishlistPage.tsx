@@ -9,7 +9,7 @@ import { LazyImage } from '../../../components/ecommerce/ui/LazyImage';
 import { EmptyState } from '../../../components/ecommerce/ui/EmptyState';
 import { formatCurrency } from '../../../utils/currency';
 import { stagger, fadeUp } from '../../../utils/animations';
-import toast from 'react-hot-toast';
+import { toast } from '../ui/Toast';
 
 
 export function WishlistPage() {

@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { MessageSquarePlus, Loader2 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from '../ui/Toast';
 import { Modal } from "../ui/Modal";
 import { StarRating } from "../reviews/StarRating";
 import { useCurrentUser } from "../../providers/CurrentUserContext";

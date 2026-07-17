@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useFeaturedProducts } from "../../../hooks/useProducts";
 import { ProductCard } from "../product/ProductCard";
 import { stagger, fadeUp } from "../../../utils/animations";
+import { useHistory } from "react-router-dom";
 
 const PRODUCT_TABS = [
   { id: "trending", label: "Trending Now", badge: "Trend" },
@@ -14,6 +15,7 @@ const PRODUCT_TABS = [
 export function TodaysProducts() {
   const { data: products, isLoading } = useFeaturedProducts();
   const [activeTab, setActiveTab] = React.useState("trending");
+  const history = useHistory();
 
   const getProductsForTab = () => {
     if (!products) return [];
@@ -91,7 +93,10 @@ export function TodaysProducts() {
         )}
 
         <div className="mt-8 text-center">
-          <button className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors">
+          <button 
+            className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+            onClick={() => history.push("/products")}
+          >
             View All Products
           </button>
         </div>

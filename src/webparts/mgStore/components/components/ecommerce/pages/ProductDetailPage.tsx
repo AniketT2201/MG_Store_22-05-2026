@@ -15,7 +15,7 @@ import { Badge } from '../../../components/ecommerce/ui/Badge';
 import { ProductDetailSkeleton } from '../../../components/ecommerce/ui/Skeleton';
 import { formatCurrency, calculateDiscount } from '../../../utils/currency';
 import { FeedbackWidget } from "../../../components/ecommerce/feedback/FeedbackWidget";
-import toast from 'react-hot-toast';
+import { toast } from '../ui/Toast';
 import { createPortal } from "react-dom";
 
 

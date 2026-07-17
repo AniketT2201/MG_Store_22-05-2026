@@ -2,7 +2,7 @@ import * as React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import toast from "react-hot-toast";
+import { toast } from '../ui/Toast';
 import { Loader2 } from "lucide-react";
 import { StarRating } from "./StarRating";
 import { useAddReview, useUpdateReview } from "../../../hooks/useReviews";

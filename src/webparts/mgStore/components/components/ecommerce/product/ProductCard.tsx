@@ -9,7 +9,7 @@ import { useUIStore } from '../../../store/uiStore';
 import { formatCurrency, calculateDiscount } from '../../../utils/currency';
 import { LazyImage } from '../ui/LazyImage';
 import { Badge } from '../ui/Badge';
-import toast from 'react-hot-toast';
+import { toast } from '../ui/Toast';
 
 interface ProductCardProps {
   product: Product;

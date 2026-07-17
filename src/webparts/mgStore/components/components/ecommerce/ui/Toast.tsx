@@ -7,7 +7,7 @@ import { CheckCircle, XCircle, AlertCircle, Info, X, ShoppingCart } from "lucide
 export function ToastProvider() {
   return (
     <Toaster
-      position="top-right"
+      position="top-center"
       gutter={12}
       containerStyle={{
         top: 80,
@@ -53,7 +53,12 @@ function ToastContent({ id, type, title, description, action }: ToastContentProp
       initial={{ opacity: 0, x: 50, scale: 0.9 }}
       animate={{ opacity: 1, x: 0, scale: 1 }}
       exit={{ opacity: 0, x: 50, scale: 0.9 }}
-      className="flex items-start gap-3 max-w-sm"
+      className="flex items-start gap-3 max-w-sm rounded-xl p-4 shadow-xl"
+      style={{
+        background: "#fff", // or "var(--card)"
+        color: "#000",      // or "var(--card-foreground)"
+        border: "1px solid var(--border)",
+      }}
     >
       <div className="flex-shrink-0 mt-0.5">{icons[type]}</div>
       <div className="flex-1 min-w-0">
@@ -99,7 +104,16 @@ export const showToast = {
           )}
         </AnimatePresence>
       ),
-      { duration: 3000 }
+      { duration: 3000,
+        style: {
+          background: "#fff",
+          color: "#000",
+          borderRadius: "12px",
+          padding: "0",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 10px 30px rgba(0,0,0,.15)",
+        },
+      }
     );
   },
 
@@ -117,7 +131,16 @@ export const showToast = {
           )}
         </AnimatePresence>
       ),
-      { duration: 5000 }
+      { duration: 5000,
+        style: {
+          background: "#fff",
+          color: "#000",
+          borderRadius: "12px",
+          padding: "0",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 10px 30px rgba(0,0,0,.15)",
+        },
+      }
     );
   },
 
@@ -135,7 +158,16 @@ export const showToast = {
           )}
         </AnimatePresence>
       ),
-      { duration: 4000 }
+      { duration: 4000,
+        style: {
+          background: "#fff",
+          color: "#000",
+          borderRadius: "12px",
+          padding: "0",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 10px 30px rgba(0,0,0,.15)",
+        },
+      }
     );
   },
 
@@ -153,7 +185,16 @@ export const showToast = {
           )}
         </AnimatePresence>
       ),
-      { duration: 4000 }
+      { duration: 4000,
+        style: {
+          background: "#fff",
+          color: "#000",
+          borderRadius: "12px",
+          padding: "0",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 10px 30px rgba(0,0,0,.15)",
+        },
+      }
     );
   },
 
@@ -176,7 +217,16 @@ export const showToast = {
           )}
         </AnimatePresence>
       ),
-      { duration: 3000 }
+      { duration: 3000,
+        style: {
+          background: "#fff",
+          color: "#000",
+          borderRadius: "12px",
+          padding: "0",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 10px 30px rgba(0,0,0,.15)",
+        },
+      }
     );
   },
 
@@ -194,7 +244,16 @@ export const showToast = {
           )}
         </AnimatePresence>
       ),
-      { duration: 3000 }
+      { duration: 3000,
+        style: {
+          background: "#fff",
+          color: "#000",
+          borderRadius: "12px",
+          padding: "0",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 10px 30px rgba(0,0,0,.15)",
+        },
+      }
     );
   },
 
@@ -212,7 +271,16 @@ export const showToast = {
           )}
         </AnimatePresence>
       ),
-      { duration: 3000 }
+      { duration: 3000,
+        style: {
+          background: "#fff",
+          color: "#000",
+          borderRadius: "12px",
+          padding: "0",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 10px 30px rgba(0,0,0,.15)",
+        },
+      }
     );
   },
 };
