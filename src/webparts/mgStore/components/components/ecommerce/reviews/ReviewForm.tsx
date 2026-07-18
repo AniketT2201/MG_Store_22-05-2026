@@ -2,7 +2,7 @@ import * as React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { toast } from '../ui/Toast';
+import { showToast } from '../ui/Toast';
 import { Loader2 } from "lucide-react";
 import { StarRating } from "./StarRating";
 import { useAddReview, useUpdateReview } from "../../../hooks/useReviews";
@@ -68,7 +68,7 @@ export function ReviewForm({ productId, existingReview, onSuccess, onCancel }: R
           productId,
           updates: { Rating: values.rating, Title: values.title, Body: values.body },
         });
-        toast.success("Your review has been updated");
+        showToast.success("Your review has been updated");
       } else {
         // Author identity is taken from the logged-in SharePoint user,
         // never from a form field — this prevents someone from submitting
@@ -84,11 +84,11 @@ export function ReviewForm({ productId, existingReview, onSuccess, onCancel }: R
           },
           IsVerified: false,
         });
-        toast.success("Thanks! Your review has been posted.");
+        showToast.success("Thanks! Your review has been posted.");
       }
       onSuccess();
     } catch (err) {
-      toast.error(
+      showToast.error(
         isEditing
           ? "We couldn't update your review. Please try again."
           : "We couldn't post your review. Please try again."

@@ -10,7 +10,7 @@ import { EmptyState } from "../../../components/ecommerce/ui/EmptyState";
 import { ProductGridSkeleton } from "../../../components/ecommerce/ui/Skeleton";
 import { formatCurrency } from "../../../utils/currency";
 import { stagger, fadeUp } from "../../../utils/animations";
-import { toast } from '../ui/Toast';
+import { showToast } from '../ui/Toast';
 
 /**
  * Read-only view of someone else's wishlist, opened from a link generated
@@ -38,7 +38,7 @@ export function WishlistSharedPage() {
 
   const handleAddToCart = (product: (typeof sharedProducts)[number]) => {
     addItem(product);
-    toast.success(`${product.Title} added to your cart!`);
+    showToast.success(`${product.Title} added to your cart!`);
     openCart();
   };
 

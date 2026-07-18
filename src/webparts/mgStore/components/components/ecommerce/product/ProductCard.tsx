@@ -9,7 +9,7 @@ import { useUIStore } from '../../../store/uiStore';
 import { formatCurrency, calculateDiscount } from '../../../utils/currency';
 import { LazyImage } from '../ui/LazyImage';
 import { Badge } from '../ui/Badge';
-import { toast } from '../ui/Toast';
+import { showToast } from '../ui/Toast';
 
 interface ProductCardProps {
   product: Product;
@@ -28,13 +28,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
     addItem(product);
-    toast.success(`${product.Title} added to cart!`, {
-      style: {
-        borderRadius: '10px',
-        background: 'var(--card)',
-        color: 'var(--card-foreground)',
-      },
-    });
+    showToast.success(`${product.Title} added to cart!`);
     openCart();
   };
 
@@ -42,16 +36,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
     toggleItem(product);
-    toast.success(
-      inWishlist ? 'Removed from wishlist' : 'Added to wishlist!',
-      {
-        style: {
-          borderRadius: '10px',
-          background: 'var(--card)',
-          color: 'var(--card-foreground)',
-        },
-      }
-    );
+    showToast.success(inWishlist ? 'Removed from wishlist' : 'Added to wishlist!');
   };
 
   const handleQuickView = (e: React.MouseEvent) => {

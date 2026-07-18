@@ -9,7 +9,7 @@ import { LazyImage } from '../../../components/ecommerce/ui/LazyImage';
 import { EmptyState } from '../../../components/ecommerce/ui/EmptyState';
 import { formatCurrency } from '../../../utils/currency';
 import { stagger, fadeUp } from '../../../utils/animations';
-import { toast } from '../ui/Toast';
+import { showToast } from '../ui/Toast';
 
 
 export function WishlistPage() {
@@ -20,7 +20,7 @@ export function WishlistPage() {
   const handleAddToCart = (item: typeof items[0]) => {
     addItem(item.Product);
     removeItem(item.ProductId);
-    toast.success(`${item.Product.Title} moved to cart!`);
+    showToast.success(`${item.Product.Title} moved to cart!`);
     openCart();
   };
 
@@ -42,9 +42,9 @@ export function WishlistPage() {
 
     try {
       await navigator.clipboard.writeText(shareUrl);
-      toast.success('Wishlist link copied to clipboard!');
+      showToast.success('Wishlist link copied to clipboard!');
     } catch {
-      toast.error("Couldn't copy the link — copy it from your browser's address bar instead.");
+      showToast.error("Couldn't copy the link — copy it from your browser's address bar instead.");
     }
   };
 
@@ -127,7 +127,7 @@ export function WishlistPage() {
                         onClick={(e) => {
                           e.preventDefault();
                           removeItem(item.ProductId);
-                          toast.success('Removed from wishlist');
+                          showToast.success('Removed from wishlist');
                         }}
                         className="absolute top-3 right-3 p-2 bg-card rounded-full text-red-500 hover:bg-red-50 transition-colors"
                         aria-label="Remove from wishlist"

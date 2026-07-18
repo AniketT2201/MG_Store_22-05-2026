@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { MessageSquarePlus, Loader2 } from "lucide-react";
-import { toast } from '../ui/Toast';
+import { showToast  } from '../ui/Toast';
 import { Modal } from "../ui/Modal";
 import { StarRating } from "../reviews/StarRating";
 import { useCurrentUser } from "../../providers/CurrentUserContext";
@@ -72,10 +72,10 @@ export function FeedbackWidget({ variant = "floating" }: FeedbackWidgetProps) {
         Author: { name: currentUser.displayName, email: currentUser.email },
         PageUrl: window.location.href,
       });
-      toast.success("Thanks for the feedback!");
+      showToast.success("Thanks for the feedback!");
       close();
     } catch {
-      toast.error("We couldn't submit your feedback. Please try again.");
+      showToast.error("We couldn't submit your feedback. Please try again.");
     }
   };
 

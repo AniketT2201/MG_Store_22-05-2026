@@ -1,7 +1,7 @@
 import * as React from "react";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Toaster } from 'react-hot-toast';
+import { ToastProvider } from '../ecommerce/ui/Toast';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -23,19 +23,7 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: 'var(--card)',
-            color: 'var(--card-foreground)',
-            border: '1px solid var(--border)',
-            borderRadius: '12px',
-            padding: '12px 16px',
-          },
-        }}
-      />
+      <ToastProvider />
     </QueryClientProvider>
   );
 }

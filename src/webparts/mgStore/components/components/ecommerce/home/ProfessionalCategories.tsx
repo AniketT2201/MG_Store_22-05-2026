@@ -13,6 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import * as Icons from "lucide-react";
 import { useCategories } from "../../../hooks/useCategories";
+import { useProducts } from "../../../hooks/useProducts";
 
 const FallbackIcon = Icons.Grid2x2;
 const iconMap: Record<string, React.ReactNode> = {
@@ -38,6 +39,7 @@ interface CategoryItem {
 
 export const ProfessionalCategories = () => {
   const { data: categories, isLoading } = useCategories();
+  const { data: products } = useProducts();
 
   const itemVariants = {
     hidden: { opacity: 0, y: 12 },
@@ -49,6 +51,20 @@ export const ProfessionalCategories = () => {
       },
     },
   };
+
+  const categoryCounts = React.useMemo(
+    () =>
+      (products ?? []).reduce((acc: Record<number, number>, product: any) => {
+        const categoryId = product.CategoryId;
+
+        if (categoryId) {
+          acc[categoryId] = (acc[categoryId] || 0) + 1;
+        }
+
+        return acc;
+      }, {}),
+    [products]
+  );
 
   return (
     <>
@@ -144,7 +160,7 @@ export const ProfessionalCategories = () => {
 
                     {/* Product Count */}
                     <p className="text-xs text-muted-foreground">
-                      {category.ProductCount} items
+                      {categoryCounts[category.ID] || 0} items
                     </p>
                   </Link>
                 </motion.div>

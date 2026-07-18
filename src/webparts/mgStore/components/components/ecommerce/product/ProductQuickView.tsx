@@ -10,7 +10,7 @@ import { formatCurrency, calculateDiscount } from "../../../utils/currency";
 import { LazyImage } from "../ui/LazyImage";
 import { Badge } from "../ui/Badge";
 import { Skeleton } from "../ui/Skeleton";
-import { toast } from '../ui/Toast';
+import { showToast } from '../ui/Toast';
 
 interface ProductQuickViewProps {
   goToProduct: (productId: number) => void;
@@ -30,7 +30,7 @@ export function ProductQuickView({ goToProduct }: ProductQuickViewProps) {
   const handleAddToCart = () => {
     if (product) {
       addItem(product, quantity);
-      toast.success(`${quantity} x ${product.Title} added to cart!`);
+      showToast.success(`${quantity} x ${product.Title} added to cart!`);
       closeQuickView();
       openCart();
     }
@@ -39,7 +39,7 @@ export function ProductQuickView({ goToProduct }: ProductQuickViewProps) {
   const handleToggleWishlist = () => {
     if (product) {
       toggleItem(product);
-      toast.success(
+      showToast.success(
         isInWishlist(product.ID) ? "Removed from wishlist" : "Added to wishlist!"
       );
     }

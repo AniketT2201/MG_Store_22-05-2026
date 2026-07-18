@@ -15,7 +15,7 @@ import { Badge } from '../../../components/ecommerce/ui/Badge';
 import { ProductDetailSkeleton } from '../../../components/ecommerce/ui/Skeleton';
 import { formatCurrency, calculateDiscount } from '../../../utils/currency';
 import { FeedbackWidget } from "../../../components/ecommerce/feedback/FeedbackWidget";
-import { toast } from '../ui/Toast';
+import { showToast } from '../ui/Toast';
 import { createPortal } from "react-dom";
 
 
@@ -61,13 +61,13 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
 
   const handleAddToCart = () => {
     addItem(product, quantity);
-    toast.success(`${quantity} x ${product.Title} added to cart!`);
+    showToast.success(`${quantity} x ${product.Title} added to cart!`);
     openCart();
   };
 
   const handleToggleWishlist = () => {
     toggleItem(product);
-    toast.success(inWishlist ? 'Removed from wishlist' : 'Added to wishlist!');
+    showToast.success(inWishlist ? 'Removed from wishlist' : 'Added to wishlist!');
   };
 
   return (

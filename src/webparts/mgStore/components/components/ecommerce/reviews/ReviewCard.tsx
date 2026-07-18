@@ -1,7 +1,7 @@
 import * as React from "react";
 import { motion } from 'framer-motion';
 import { ThumbsUp, CheckCircle, Pencil, Trash2 } from 'lucide-react';
-import { toast } from '../ui/Toast';
+import { showToast } from '../ui/Toast';
 import { Review } from '../../../types';
 import { StarRating } from './StarRating';
 import { formatDistanceToNow } from 'date-fns';
@@ -36,8 +36,8 @@ export function ReviewCard({ review, onEdit }: ReviewCardProps) {
     deleteReview.mutate(
       { reviewId: review.ID, productId: review.ProductId },
       {
-        onSuccess: () => toast.success("Your review was deleted"),
-        onError: () => toast.error("We couldn't delete your review. Please try again."),
+        onSuccess: () => showToast.success("Your review was deleted"),
+        onError: () => showToast.error("We couldn't delete your review. Please try again."),
       }
     );
   };
